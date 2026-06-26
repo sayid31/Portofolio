@@ -1,51 +1,95 @@
-import { motion } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
+
+// ── Tech group data ───────────────────────────────────────────────────────────
 
 const GROUPS = [
   {
     domain: 'Backend & API',
     description: 'Server-side architecture, data modelling, and security.',
     items: [
-      { name: 'Node.js',       role: 'Runtime & async I/O'       },
-      { name: 'Express',       role: 'HTTP server framework'      },
-      { name: 'MongoDB',       role: 'Document store & queries'   },
-      { name: 'PostgreSQL',    role: 'Relational DB & transactions'},
-      { name: 'JWT Auth',      role: 'Stateless security layer'   },
-      { name: 'RESTful API',   role: 'HTTP/JSON design patterns'  },
+      { name: 'Node.js',       role: 'Runtime & async I/O'        },
+      { name: 'Express',       role: 'HTTP server framework'       },
+      { name: 'MongoDB',       role: 'Document store & queries'    },
+      { name: 'PostgreSQL',    role: 'Relational DB & transactions' },
+      { name: 'JWT Auth',      role: 'Stateless security layer'    },
+      { name: 'RESTful API',   role: 'HTTP/JSON design patterns'   },
     ],
   },
   {
     domain: 'Frontend & UI',
     description: 'Component-driven interfaces built for real users.',
     items: [
-      { name: 'React.js',      role: 'Component UI runtime'       },
-      { name: 'Vite',          role: 'Build tooling & HMR'        },
-      { name: 'Tailwind CSS',  role: 'Utility-first styling'      },
-      { name: 'JavaScript ES+',role: 'Language runtime'           },
+      { name: 'React.js',      role: 'Component UI runtime'    },
+      { name: 'Vite',          role: 'Build tooling & HMR'     },
+      { name: 'Tailwind CSS',  role: 'Utility-first styling'   },
+      { name: 'JavaScript ES+',role: 'Language runtime'        },
     ],
   },
   {
     domain: 'Embedded & IoT',
     description: 'Firmware, control systems, and hardware-software bridges.',
     items: [
-      { name: 'Arduino Uno',   role: 'Microcontroller platform'   },
-      { name: 'Fuzzy Logic',   role: 'Control system algorithm'   },
-      { name: 'C++ Firmware',  role: 'Embedded code execution'    },
-      { name: 'Sensor I/O',    role: 'Signal acquisition & ADC'   },
-      { name: 'PWM Control',   role: 'Actuator duty-cycle driving' },
+      { name: 'Arduino Uno',   role: 'Microcontroller platform'    },
+      { name: 'Fuzzy Logic',   role: 'Control system algorithm'    },
+      { name: 'C++ Firmware',  role: 'Embedded code execution'     },
+      { name: 'Sensor I/O',    role: 'Signal acquisition & ADC'    },
+      { name: 'PWM Control',   role: 'Actuator duty-cycle driving'  },
     ],
   },
 ]
+
+// ── Skills proficiency data ───────────────────────────────────────────────────
+
+const SKILLS = [
+  { name: 'REST API Design',    pct: 88, accent: '#6366f1' },
+  { name: 'React.js',           pct: 82, accent: '#10b981' },
+  { name: 'Node.js / Express',  pct: 85, accent: '#6366f1' },
+  { name: 'Tailwind CSS',       pct: 85, accent: '#10b981' },
+  { name: 'System Architecture',pct: 80, accent: '#8b5cf6' },
+  { name: 'MongoDB',            pct: 78, accent: '#6366f1' },
+  { name: 'PostgreSQL',         pct: 70, accent: '#6366f1' },
+  { name: 'C++ / IoT Firmware', pct: 65, accent: '#f97316' },
+]
+
+// ── SkillBar — animates width into view ──────────────────────────────────────
+
+function SkillBar({ name, pct, accent, index }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: -16 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, amount: 0.5 }}
+      transition={{ duration: 0.45, delay: index * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }}
+      className="space-y-1.5"
+    >
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-muted font-medium">{name}</span>
+        <span className="text-[11px] font-mono text-dim tabular-nums">{pct}%</span>
+      </div>
+      <div className="h-1 w-full rounded-full bg-fence overflow-hidden">
+        <motion.div
+          className="h-full rounded-full"
+          style={{ backgroundColor: accent }}
+          initial={{ width: 0 }}
+          whileInView={{ width: `${pct}%` }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 1.1, delay: 0.2 + index * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }}
+        />
+      </div>
+    </motion.div>
+  )
+}
+
+// ── GroupCard ─────────────────────────────────────────────────────────────────
 
 function GroupCard({ domain, description, items }) {
   return (
     <div className="flex flex-col p-6 rounded-xl border border-fence bg-card">
       <div className="mb-5">
-        <h3 className="text-sm font-semibold text-ink tracking-tight mb-1">
-          {domain}
-        </h3>
+        <h3 className="text-sm font-semibold text-ink tracking-tight mb-1">{domain}</h3>
         <p className="text-xs text-dim leading-relaxed">{description}</p>
       </div>
-
       <ul className="space-y-0 flex-1">
         {items.map(({ name, role }, i) => (
           <li
@@ -55,9 +99,7 @@ function GroupCard({ domain, description, items }) {
             }`}
           >
             <span className="text-sm text-ink font-medium whitespace-nowrap">{name}</span>
-            <span className="text-xs text-dim font-mono sm:text-right sm:shrink-0">
-              {role}
-            </span>
+            <span className="text-xs text-dim font-mono sm:text-right sm:shrink-0">{role}</span>
           </li>
         ))}
       </ul>
@@ -73,6 +115,8 @@ const cardVariants = {
     transition: { duration: 0.5, delay: i * 0.12, ease: [0.25, 0.46, 0.45, 0.94] },
   }),
 }
+
+// ── Main section ──────────────────────────────────────────────────────────────
 
 export default function TechStack() {
   return (
@@ -97,7 +141,7 @@ export default function TechStack() {
         </p>
       </motion.div>
 
-      {/* Group cards — staggered */}
+      {/* Group cards — stagger */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {GROUPS.map((g, i) => (
           <motion.div
@@ -113,7 +157,7 @@ export default function TechStack() {
         ))}
       </div>
 
-      {/* Architecture philosophy strip */}
+      {/* Architecture pattern strip */}
       <motion.div
         className="mt-6 flex flex-wrap items-center gap-4 px-5 py-4 rounded-xl border border-fence bg-card"
         initial={{ opacity: 0 }}
@@ -125,14 +169,51 @@ export default function TechStack() {
           Design Pattern
         </span>
         <div className="flex flex-wrap items-center gap-1.5 text-xs font-mono text-muted">
-          {[
-            'Controller', '→', 'Service', '→', 'Repository', '→', 'Database',
-          ].map((node, i) => (
-            <span
-              key={i}
-              className={node === '→' ? 'text-faint' : 'text-[#a3a3a3]'}
-            >
+          {['Controller', '→', 'Service', '→', 'Repository', '→', 'Database'].map((node, i) => (
+            <span key={i} className={node === '→' ? 'text-faint' : 'text-[#a3a3a3]'}>
               {node}
+            </span>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* ── Skill Proficiency Bars ─────────────────────────────────────────── */}
+      <motion.div
+        className="mt-12"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+      >
+        <div className="mb-6">
+          <p className="text-xs text-dim font-mono uppercase tracking-widest mb-1">
+            Proficiency
+          </p>
+          <h3 className="text-base font-semibold text-ink">
+            Focus Areas
+          </h3>
+          <p className="text-xs text-dim mt-1 max-w-[42ch]">
+            Relative depth across disciplines — based on shipped projects, not self-assessment alone.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-4">
+          {SKILLS.map((s, i) => (
+            <SkillBar key={s.name} {...s} index={i} />
+          ))}
+        </div>
+
+        {/* Legend */}
+        <div className="mt-6 flex flex-wrap items-center gap-4 text-[11px] text-dim font-mono">
+          {[
+            { label: 'Backend',  color: '#6366f1' },
+            { label: 'Frontend', color: '#10b981' },
+            { label: 'System',   color: '#8b5cf6' },
+            { label: 'IoT',      color: '#f97316' },
+          ].map(({ label, color }) => (
+            <span key={label} className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-sm inline-block" style={{ background: color }} />
+              {label}
             </span>
           ))}
         </div>

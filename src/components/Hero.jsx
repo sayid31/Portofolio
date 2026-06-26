@@ -1,13 +1,40 @@
-import { lazy, Suspense } from 'react'
-import { motion } from 'framer-motion'
+import { lazy, Suspense, useRef, useEffect, useState } from 'react'
+import { motion, useInView, animate } from 'framer-motion'
 
 const HeroScene = lazy(() => import('./HeroScene'))
 
+// ── Animated counter — counts from 0 → target when scrolled into view ─────────
+
+function AnimatedCounter({ to, suffix = '', delay = 0 }) {
+  const [val, setVal] = useState(0)
+  const ref  = useRef(null)
+  const inView = useInView(ref, { once: true, amount: 0.8 })
+
+  useEffect(() => {
+    if (!inView) return
+    const ctrl = animate(0, to, {
+      duration: 1.8,
+      delay,
+      ease: [0.25, 0.46, 0.45, 0.94],
+      onUpdate: (v) => setVal(Math.round(v)),
+    })
+    return () => ctrl.stop()
+  }, [inView, to, delay])
+
+  return (
+    <span ref={ref}>
+      {val}{suffix}
+    </span>
+  )
+}
+
+// ── Stats data — numeric entries use AnimatedCounter ──────────────────────────
+
 const STATS = [
-  { value: '3+',     label: 'Systems Shipped'     },
-  { value: '2',      label: 'Engineering Domains'  },
-  { value: 'F → F', label: 'Firmware to Frontend' },
-  { value: '100%',   label: 'Auth-First Design'    },
+  { num: 3,    suffix: '+',  label: 'Systems Shipped'     },
+  { num: 2,    suffix: '',   label: 'Engineering Domains'  },
+  { text: 'F→F',             label: 'Firmware to Frontend' },
+  { num: 100,  suffix: '%',  label: 'Auth-First Design'    },
 ]
 
 function ArrowRight() {
@@ -24,10 +51,9 @@ function ArrowRight() {
   )
 }
 
-// Factory: returns initial/animate/transition props for a fade-up motion element
 const up = (delay = 0) => ({
   initial:    { opacity: 0, y: 22 },
-  animate:    { opacity: 1, y: 0 },
+  animate:    { opacity: 1, y: 0  },
   transition: { duration: 0.55, delay, ease: [0.25, 0.46, 0.45, 0.94] },
 })
 
@@ -66,17 +92,17 @@ export default function Hero() {
         }}
       />
 
-      {/* ── Three.js scene — desktop only, lazy-loaded ─────────────────────── */}
+      {/* Three.js scene — desktop only, lazy-loaded */}
       <div className="hidden md:block absolute inset-0 pointer-events-none">
         <Suspense fallback={null}>
           <HeroScene />
         </Suspense>
       </div>
 
-      {/* ── Content ──────────────────────────────────────────────────────────── */}
+      {/* ── Content ────────────────────────────────────────────────────────── */}
       <div className="relative max-w-6xl mx-auto px-6 pt-14 pb-28 w-full">
 
-        {/* Role chip — instant fade */}
+        {/* Role chip */}
         <motion.div className="mb-8" {...up(0)}>
           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-fence bg-surface text-xs text-muted font-mono tracking-wide">
             <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
@@ -93,9 +119,7 @@ export default function Hero() {
           Building End-to-End
           <br />
           Web Applications &amp;{' '}
-          <span className="text-muted">
-            Intelligent IoT Solutions.
-          </span>
+          <span className="text-muted">Intelligent IoT Solutions.</span>
         </motion.h1>
 
         {/* Sub-headline */}
@@ -103,7 +127,9 @@ export default function Hero() {
           className="text-base md:text-[1.0625rem] text-muted leading-relaxed mb-10 max-w-[44ch]"
           {...up(0.2)}
         >
-          I engineer comprehensive digital solutions—from designing intuitive, admin-focused monitoring dashboards to architecting secure Node.js APIs and bridging web platforms with hardware ecosystems.
+          I engineer comprehensive digital solutions—from designing intuitive,
+          admin-focused monitoring dashboards to architecting secure Node.js APIs
+          and bridging web platforms with hardware ecosystems.
         </motion.p>
 
         {/* CTA buttons */}
@@ -123,7 +149,7 @@ export default function Hero() {
           </a>
         </motion.div>
 
-        {/* Stat bar — each stat staggers in */}
+        {/* Stat bar — stagger in, then counter animates */}
         <div className="grid grid-cols-2 gap-y-6 md:flex md:flex-wrap md:items-center md:divide-x md:divide-fence pt-8 border-t border-fence">
           {STATS.map((s, i) => (
             <motion.div
@@ -132,7 +158,10 @@ export default function Hero() {
               {...up(0.4 + i * 0.07)}
             >
               <div className="text-xl font-semibold text-ink font-mono tracking-tight">
-                {s.value}
+                {s.num != null
+                  ? <AnimatedCounter to={s.num} suffix={s.suffix} delay={0.5 + i * 0.1} />
+                  : s.text
+                }
               </div>
               <div className="text-[11px] text-dim mt-0.5 tracking-wide uppercase">
                 {s.label}
