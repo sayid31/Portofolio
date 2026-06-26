@@ -1,5 +1,5 @@
 import { lazy, Suspense, useRef, useEffect, useState } from 'react'
-import { motion, useInView, animate } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 
 const HeroScene = lazy(() => import('./HeroScene'))
 
@@ -7,18 +7,25 @@ const HeroScene = lazy(() => import('./HeroScene'))
 
 function AnimatedCounter({ to, suffix = '', delay = 0 }) {
   const [val, setVal] = useState(0)
-  const ref  = useRef(null)
-  const inView = useInView(ref, { once: true, amount: 0.8 })
+  const ref    = useRef(null)
+  const inView = useInView(ref, { once: true })
 
   useEffect(() => {
     if (!inView) return
-    const ctrl = animate(0, to, {
-      duration: 1.8,
-      delay,
-      ease: [0.25, 0.46, 0.45, 0.94],
-      onUpdate: (v) => setVal(Math.round(v)),
-    })
-    return () => ctrl.stop()
+    const duration = 1800
+    let startTime = null
+    let rafId
+    const timer = setTimeout(() => {
+      const tick = (t) => {
+        if (!startTime) startTime = t
+        const progress = Math.min((t - startTime) / duration, 1)
+        const eased = 1 - (1 - progress) ** 3
+        setVal(Math.round(eased * to))
+        if (progress < 1) rafId = requestAnimationFrame(tick)
+      }
+      rafId = requestAnimationFrame(tick)
+    }, delay * 1000)
+    return () => { clearTimeout(timer); cancelAnimationFrame(rafId) }
   }, [inView, to, delay])
 
   return (
