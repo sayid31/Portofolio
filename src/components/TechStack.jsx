@@ -48,12 +48,12 @@ function GroupCard({ domain, description, items }) {
         {items.map(({ name, role }, i) => (
           <li
             key={name}
-            className={`flex items-start justify-between gap-4 py-3 ${
+            className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-0.5 sm:gap-4 py-3 ${
               i < items.length - 1 ? 'border-b border-fence' : ''
             }`}
           >
-            <span className="text-sm text-ink font-medium">{name}</span>
-            <span className="text-xs text-dim font-mono text-right shrink-0 mt-0.5">
+            <span className="text-sm text-ink font-medium whitespace-nowrap">{name}</span>
+            <span className="text-xs text-dim font-mono sm:text-right sm:shrink-0">
               {role}
             </span>
           </li>
