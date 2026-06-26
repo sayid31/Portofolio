@@ -349,7 +349,7 @@ function POSCard() {
       {/* Top */}
       <div>
         <img
-          src={`${import.meta.env.BASE_URL}images/burger-pos.webp`}
+          src={`${import.meta.env.BASE_URL}images/burger-post.webp`}
           alt="Burger POS System preview"
           className="w-full aspect-video object-cover border border-white/10 rounded-lg mb-5"
           loading="lazy"
