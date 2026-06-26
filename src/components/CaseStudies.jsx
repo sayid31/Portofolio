@@ -68,7 +68,94 @@ function CardShell({ children, className = '', accentLine = false }) {
   )
 }
 
-/* ─── Card 1: Sauber Composter (featured, 2-col wide) ──────────────────── */
+/* ─── Card 1: Restock / Stock Movement System (featured, full-width) ────── */
+
+const MOVEMENT_TYPES = [
+  { type: 'INBOUND',  desc: 'stock increases',   color: 'text-accent'     },
+  { type: 'OUTBOUND', desc: 'stock decreases',    color: 'text-red-400'    },
+  { type: 'RELOCATE', desc: 'location updates',   color: 'text-yellow-500' },
+]
+
+function RestockCard() {
+  return (
+    <CardShell className="md:col-span-2 p-6 gap-5">
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-fence-active to-transparent" />
+
+      <img
+        src={`${import.meta.env.BASE_URL}images/restock-engine.webp`}
+        alt="Smart Supply Chain Restock Engine preview"
+        className="w-full aspect-video object-cover border border-white/10 rounded-lg"
+        loading="lazy"
+      />
+
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Left: description */}
+        <div>
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <Tag>Supply Chain</Tag>
+              <Tag variant="accent">● Auto-Alert</Tag>
+            </div>
+            <a href="#" className="text-faint hover:text-ink transition-colors shrink-0 ml-2" aria-label="View project">
+              <ArrowUpRight />
+            </a>
+          </div>
+
+          <h2 className="text-lg font-semibold text-ink tracking-tight mb-0.5">
+            Restock &amp; Stock Movement System
+          </h2>
+          <p className="text-xs text-dim font-mono mb-4">
+            Atomic audit trail with automated low-stock alerts
+          </p>
+
+          <p className="text-sm text-muted leading-relaxed">
+            Every stock mutation is wrapped in a{' '}
+            <span className="text-[#c4c4c4]">MySQL transaction</span> with row-level
+            locking (<span className="text-accent font-mono">FOR UPDATE</span>) to
+            prevent race conditions under concurrent load. Immutable audit log
+            captures before/after snapshots on every movement. A{' '}
+            <span className="text-[#c4c4c4]">node-cron job</span> scans for
+            sub-threshold items and fires a summary email to the warehouse manager
+            — zero manual monitoring required.
+          </p>
+
+          <div className="mt-4 flex flex-wrap items-center gap-1.5">
+            {['Node.js', 'MySQL', 'node-cron', 'Nodemailer', 'Express'].map((t) => (
+              <Tag key={t}>{t}</Tag>
+            ))}
+            <GitHubButton href="https://github.com/sayid31/Restock_Engine" />
+          </div>
+        </div>
+
+        {/* Right: movement types + alert metric */}
+        <div className="flex flex-col gap-3 justify-center">
+          <div className="space-y-1.5">
+            {MOVEMENT_TYPES.map(({ type, desc, color }) => (
+              <div
+                key={type}
+                className="flex items-center gap-3 px-3 py-2 rounded-lg bg-[#0a0a0a] border border-fence font-mono text-xs"
+              >
+                <span className={`${color} font-semibold w-[68px] shrink-0`}>{type}</span>
+                <span className="text-faint">→</span>
+                <span className="text-dim">{desc}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-3 px-3.5 py-3 rounded-lg border border-fence bg-[#0a0a0a]">
+            <div className="w-1.5 h-1.5 rounded-full bg-accent shrink-0 animate-pulse" />
+            <span className="text-xs text-muted font-mono">
+              Low-stock alert fires when{' '}
+              <span className="text-accent font-semibold">current_stock &lt; threshold</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </CardShell>
+  )
+}
+
+/* ─── Card 2: Sauber Composter (featured) ───────────────────────────────── */
 
 const SENSORS = [
   { id: 'DS18B20',    label: 'suhu',        unit: '°C',    color: 'text-accent'     },
@@ -79,7 +166,7 @@ const SENSORS = [
 
 function SauberCard() {
   return (
-    <CardShell className="md:col-span-2 p-6 gap-5 justify-between min-h-[300px]" accentLine>
+    <CardShell className="p-6 gap-5 justify-between" accentLine>
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -88,43 +175,52 @@ function SauberCard() {
         }}
       />
 
-      {/* Top section */}
-      <div className="relative">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <Tag variant="accent">IoT &amp; Embedded</Tag>
-            <Tag variant="accent">● Live</Tag>
+      {/* Top section with image */}
+      <div className="relative space-y-5">
+        <img
+          src={`${import.meta.env.BASE_URL}images/sauber.webp`}
+          alt="Sauber Organic Composter preview"
+          className="w-full aspect-video object-cover border border-white/10 rounded-lg"
+          loading="lazy"
+        />
+
+        <div>
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <Tag variant="accent">IoT &amp; Embedded</Tag>
+              <Tag variant="accent">● Live</Tag>
+            </div>
+            <a
+              href="#"
+              className="text-faint hover:text-ink transition-colors shrink-0 ml-2"
+              aria-label="View project"
+            >
+              <ArrowUpRight />
+            </a>
           </div>
-          <a
-            href="#"
-            className="text-faint hover:text-ink transition-colors shrink-0 ml-2"
-            aria-label="View project"
-          >
-            <ArrowUpRight />
-          </a>
+
+          <h2 className="text-lg font-semibold text-ink tracking-tight mb-0.5">
+            Sauber Organic Composter
+          </h2>
+          <p className="text-xs text-dim font-mono mb-4">
+            IoT sistem kompos otomatis berbasis Fuzzy Logic
+          </p>
+
+          <p className="text-sm text-muted leading-relaxed max-w-lg">
+            <span className="text-[#c4c4c4]">ESP32</span> membaca 4 sensor secara
+            real-time dan menjalankan{' '}
+            <span className="text-accent">Sugeno Fuzzy Inference</span> dengan 12
+            rule untuk menentukan tingkat kematangan kompos. Tiga aktuator
+            dikontrol otomatis — pompa EM4 (sekali saat batch baru), motor pengaduk
+            (terjadwal RTC setiap{' '}
+            <span className="text-accent font-mono">20:30</span>), dan kipas (durasi
+            variabel{' '}
+            <span className="text-accent font-mono">30s / 60s / 120s</span>{' '}
+            berdasarkan output fuzzy). Data dikirim ke{' '}
+            <span className="text-[#c4c4c4]">dual backend</span> (HTTPS produksi +
+            HTTP lokal pameran) setiap 30 menit, dipantau lewat dashboard React.
+          </p>
         </div>
-
-        <h2 className="text-lg font-semibold text-ink tracking-tight mb-0.5">
-          Sauber Organic Composter
-        </h2>
-        <p className="text-xs text-dim font-mono mb-4">
-          IoT sistem kompos otomatis berbasis Fuzzy Logic
-        </p>
-
-        <p className="text-sm text-muted leading-relaxed max-w-lg">
-          <span className="text-[#c4c4c4]">ESP32</span> membaca 4 sensor secara
-          real-time dan menjalankan{' '}
-          <span className="text-accent">Sugeno Fuzzy Inference</span> dengan 12
-          rule untuk menentukan tingkat kematangan kompos. Tiga aktuator
-          dikontrol otomatis — pompa EM4 (sekali saat batch baru), motor pengaduk
-          (terjadwal RTC setiap{' '}
-          <span className="text-accent font-mono">20:30</span>), dan kipas (durasi
-          variabel{' '}
-          <span className="text-accent font-mono">30s / 60s / 120s</span>{' '}
-          berdasarkan output fuzzy). Data dikirim ke{' '}
-          <span className="text-[#c4c4c4]">dual backend</span> (HTTPS produksi +
-          HTTP lokal pameran) setiap 30 menit, dipantau lewat dashboard React.
-        </p>
       </div>
 
       {/* Bottom section */}
@@ -159,7 +255,85 @@ function SauberCard() {
   )
 }
 
-/* ─── Card 2: Burger POS System (tall, right column) ───────────────────── */
+/* ─── Card 3: SaaS Financial BEP Calculator (featured) ─────────────────── */
+
+function FinancialCard() {
+  return (
+    <CardShell className="p-6 gap-5 justify-between" accentLine>
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse 50% 60% at 100% 100%, rgba(59,130,246,0.05), transparent)',
+        }}
+      />
+
+      <div className="relative space-y-5">
+        <img
+          src={`${import.meta.env.BASE_URL}images/financial-bep.webp`}
+          alt="Full-Stack AI Financial Forecaster preview"
+          className="w-full aspect-video object-cover border border-white/10 rounded-lg"
+          loading="lazy"
+        />
+
+        <div>
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <Tag variant="blue">Financial SaaS</Tag>
+              <Tag variant="blue">TypeScript</Tag>
+            </div>
+            <a href="#" className="text-faint hover:text-ink transition-colors shrink-0 ml-2" aria-label="View project">
+              <ArrowUpRight />
+            </a>
+          </div>
+
+          <h2 className="text-lg font-semibold text-ink tracking-tight mb-0.5">
+            SaaS Break-Even Point Calculator
+          </h2>
+          <p className="text-xs text-dim font-mono mb-4">
+            AI-powered financial forecasting API
+          </p>
+
+          <p className="text-sm text-muted leading-relaxed max-w-lg">
+            Full financial projection engine computing{' '}
+            <span className="text-[#c4c4c4]">Break-Even Point</span> via
+            contribution margin analysis. Results persist atomically via{' '}
+            <span className="text-blue-400 font-mono">Prisma.$transaction()</span>{' '}
+            — no orphaned records on failure. Versioned API{' '}
+            <span className="text-blue-400 font-mono">/api/v1/</span> for
+            non-breaking evolution.
+          </p>
+        </div>
+      </div>
+
+      <div className="relative">
+        <div className="mb-4 p-3.5 rounded-lg border border-fence bg-[#0a0a0a] font-mono text-xs leading-6">
+          <div className="text-faint mb-1 select-none">{'// bep_formula.ts'}</div>
+          <div>
+            <span className="text-blue-400">CM </span>
+            <span className="text-dim"> = price - varCost</span>
+          </div>
+          <div>
+            <span className="text-blue-400">BEP</span>
+            <span className="text-dim"> = fixedCosts / CM</span>
+          </div>
+          <div>
+            <span className="text-blue-400">REV</span>
+            <span className="text-dim"> = BEP × price</span>
+          </div>
+        </div>
+        <div className="flex flex-wrap items-center gap-1.5">
+          {['TypeScript', 'Express', 'PostgreSQL', 'Prisma', 'REST'].map((t) => (
+            <Tag key={t}>{t}</Tag>
+          ))}
+          <GitHubButton href="https://github.com/sayid31/System_Financial" />
+        </div>
+      </div>
+    </CardShell>
+  )
+}
+
+/* ─── Card 4: Burger POS System (secondary) ─────────────────────────────── */
 
 const POS_PAGES = [
   { page: 'index.html',     label: 'Customer Menu & Cart',  color: 'text-accent'     },
@@ -242,7 +416,58 @@ function POSCard() {
   )
 }
 
-/* ─── Card 3: Gaming Liquid Shield ─────────────────────────────────────── */
+/* ─── Card 5: Inventory Management System (secondary) ───────────────────── */
+
+function InventoryCard() {
+  return (
+    <CardShell className="p-6 gap-5 justify-between min-h-[280px]">
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-fence-active to-transparent" />
+
+      <div>
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <Tag>Full-Stack</Tag>
+            <Tag variant="blue">Inventory</Tag>
+          </div>
+          <a href="#" className="text-faint hover:text-ink transition-colors shrink-0 ml-2" aria-label="View project">
+            <ArrowUpRight />
+          </a>
+        </div>
+
+        <h2 className="text-base font-semibold text-ink tracking-tight mb-0.5">
+          Inventory Management System
+        </h2>
+        <p className="text-xs text-dim font-mono mb-4">
+          Warehouse item tracking &amp; control
+        </p>
+
+        <p className="text-sm text-muted leading-relaxed">
+          SKU-based warehouse inventory with{' '}
+          <span className="text-[#c4c4c4]">role-based JWT auth</span>, category
+          filtering, search, and multi-location tracking. Admin-gated mutations
+          with paginated item queries.
+        </p>
+      </div>
+
+      <div>
+        <div className="mb-3 p-3 rounded-lg border border-fence bg-[#0a0a0a] font-mono text-xs leading-5">
+          <div className="text-faint mb-1 select-none">{'// item record'}</div>
+          <div><span className="text-blue-400">sku</span><span className="text-dim">      = </span><span className="text-accent">"WH-001-A"</span></div>
+          <div><span className="text-blue-400">stock</span><span className="text-dim">    = </span><span className="text-ink">142</span><span className="text-dim"> / threshold: </span><span className="text-yellow-500">50</span></div>
+          <div><span className="text-blue-400">location</span><span className="text-dim"> = </span><span className="text-accent">"Zone A-3"</span></div>
+        </div>
+        <div className="flex flex-wrap items-center gap-1.5">
+          {['Node.js', 'Express', 'MySQL', 'React', 'JWT'].map((t) => (
+            <Tag key={t}>{t}</Tag>
+          ))}
+          <GitHubButton href="https://github.com/sayid31/inventory-supply-chain-" />
+        </div>
+      </div>
+    </CardShell>
+  )
+}
+
+/* ─── Card 6: Gaming Liquid Shield (secondary) ───────────────────────────── */
 
 function GamingShieldCard() {
   return (
@@ -296,207 +521,7 @@ function GamingShieldCard() {
   )
 }
 
-/* ─── Card 4: Inventory Management System ──────────────────────────────── */
-
-function InventoryCard() {
-  return (
-    <CardShell className="p-6 gap-5 justify-between min-h-[280px]">
-      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-fence-active to-transparent" />
-
-      <div>
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <Tag>Full-Stack</Tag>
-            <Tag variant="blue">Inventory</Tag>
-          </div>
-          <a href="#" className="text-faint hover:text-ink transition-colors shrink-0 ml-2" aria-label="View project">
-            <ArrowUpRight />
-          </a>
-        </div>
-
-        <h2 className="text-base font-semibold text-ink tracking-tight mb-0.5">
-          Inventory Management System
-        </h2>
-        <p className="text-xs text-dim font-mono mb-4">
-          Warehouse item tracking &amp; control
-        </p>
-
-        <p className="text-sm text-muted leading-relaxed">
-          SKU-based warehouse inventory with{' '}
-          <span className="text-[#c4c4c4]">role-based JWT auth</span>, category
-          filtering, search, and multi-location tracking. Admin-gated mutations
-          with paginated item queries.
-        </p>
-      </div>
-
-      <div>
-        <div className="mb-3 p-3 rounded-lg border border-fence bg-[#0a0a0a] font-mono text-xs leading-5">
-          <div className="text-faint mb-1 select-none">{'// item record'}</div>
-          <div><span className="text-blue-400">sku</span><span className="text-dim">      = </span><span className="text-accent">"WH-001-A"</span></div>
-          <div><span className="text-blue-400">stock</span><span className="text-dim">    = </span><span className="text-ink">142</span><span className="text-dim"> / threshold: </span><span className="text-yellow-500">50</span></div>
-          <div><span className="text-blue-400">location</span><span className="text-dim"> = </span><span className="text-accent">"Zone A-3"</span></div>
-        </div>
-        <div className="flex flex-wrap items-center gap-1.5">
-          {['Node.js', 'Express', 'MySQL', 'React', 'JWT'].map((t) => (
-            <Tag key={t}>{t}</Tag>
-          ))}
-          <GitHubButton href="https://github.com/sayid31/inventory-supply-chain-" />
-        </div>
-      </div>
-    </CardShell>
-  )
-}
-
-/* ─── Card 6: SaaS Financial BEP Calculator ────────────────────────────── */
-
-function FinancialCard() {
-  return (
-    <CardShell className="p-6 gap-5 justify-between min-h-[280px]" accentLine>
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(ellipse 50% 60% at 100% 100%, rgba(59,130,246,0.05), transparent)',
-        }}
-      />
-
-      <div className="relative">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <Tag variant="blue">Financial SaaS</Tag>
-            <Tag variant="blue">TypeScript</Tag>
-          </div>
-          <a href="#" className="text-faint hover:text-ink transition-colors shrink-0 ml-2" aria-label="View project">
-            <ArrowUpRight />
-          </a>
-        </div>
-
-        <h2 className="text-lg font-semibold text-ink tracking-tight mb-0.5">
-          SaaS Break-Even Point Calculator
-        </h2>
-        <p className="text-xs text-dim font-mono mb-4">
-          AI-powered financial forecasting API
-        </p>
-
-        <p className="text-sm text-muted leading-relaxed max-w-lg">
-          Full financial projection engine computing{' '}
-          <span className="text-[#c4c4c4]">Break-Even Point</span> via
-          contribution margin analysis. Results persist atomically via{' '}
-          <span className="text-blue-400 font-mono">Prisma.$transaction()</span>{' '}
-          — no orphaned records on failure. Versioned API{' '}
-          <span className="text-blue-400 font-mono">/api/v1/</span> for
-          non-breaking evolution.
-        </p>
-      </div>
-
-      <div className="relative">
-        <div className="mb-4 p-3.5 rounded-lg border border-fence bg-[#0a0a0a] font-mono text-xs leading-6">
-          <div className="text-faint mb-1 select-none">{'// bep_formula.ts'}</div>
-          <div>
-            <span className="text-blue-400">CM </span>
-            <span className="text-dim"> = price - varCost</span>
-          </div>
-          <div>
-            <span className="text-blue-400">BEP</span>
-            <span className="text-dim"> = fixedCosts / CM</span>
-          </div>
-          <div>
-            <span className="text-blue-400">REV</span>
-            <span className="text-dim"> = BEP × price</span>
-          </div>
-        </div>
-        <div className="flex flex-wrap items-center gap-1.5">
-          {['TypeScript', 'Express', 'PostgreSQL', 'Prisma', 'REST'].map((t) => (
-            <Tag key={t}>{t}</Tag>
-          ))}
-          <GitHubButton href="https://github.com/sayid31/System_Financial" />
-        </div>
-      </div>
-    </CardShell>
-  )
-}
-
-/* ─── Card 7: Restock / Stock Movement System ───────────────────────────── */
-
-const MOVEMENT_TYPES = [
-  { type: 'INBOUND',  desc: 'stock increases',   color: 'text-accent'     },
-  { type: 'OUTBOUND', desc: 'stock decreases',    color: 'text-red-400'    },
-  { type: 'RELOCATE', desc: 'location updates',   color: 'text-yellow-500' },
-]
-
-function RestockCard() {
-  return (
-    <CardShell className="md:col-span-2 p-6 gap-5 min-h-[240px]">
-      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-fence-active to-transparent" />
-
-      <div className="grid md:grid-cols-2 gap-6">
-        {/* Left: description */}
-        <div>
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex flex-wrap items-center gap-2">
-              <Tag>Supply Chain</Tag>
-              <Tag variant="accent">● Auto-Alert</Tag>
-            </div>
-            <a href="#" className="text-faint hover:text-ink transition-colors shrink-0 ml-2" aria-label="View project">
-              <ArrowUpRight />
-            </a>
-          </div>
-
-          <h2 className="text-lg font-semibold text-ink tracking-tight mb-0.5">
-            Restock &amp; Stock Movement System
-          </h2>
-          <p className="text-xs text-dim font-mono mb-4">
-            Atomic audit trail with automated low-stock alerts
-          </p>
-
-          <p className="text-sm text-muted leading-relaxed">
-            Every stock mutation is wrapped in a{' '}
-            <span className="text-[#c4c4c4]">MySQL transaction</span> with row-level
-            locking (<span className="text-accent font-mono">FOR UPDATE</span>) to
-            prevent race conditions under concurrent load. Immutable audit log
-            captures before/after snapshots on every movement. A{' '}
-            <span className="text-[#c4c4c4]">node-cron job</span> scans for
-            sub-threshold items and fires a summary email to the warehouse manager
-            — zero manual monitoring required.
-          </p>
-
-          <div className="mt-4 flex flex-wrap items-center gap-1.5">
-            {['Node.js', 'MySQL', 'node-cron', 'Nodemailer', 'Express'].map((t) => (
-              <Tag key={t}>{t}</Tag>
-            ))}
-            <GitHubButton href="https://github.com/sayid31/Restock_Engine" />
-          </div>
-        </div>
-
-        {/* Right: movement types + alert metric */}
-        <div className="flex flex-col gap-3 justify-center">
-          <div className="space-y-1.5">
-            {MOVEMENT_TYPES.map(({ type, desc, color }) => (
-              <div
-                key={type}
-                className="flex items-center gap-3 px-3 py-2 rounded-lg bg-[#0a0a0a] border border-fence font-mono text-xs"
-              >
-                <span className={`${color} font-semibold w-[68px] shrink-0`}>{type}</span>
-                <span className="text-faint">→</span>
-                <span className="text-dim">{desc}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-3 px-3.5 py-3 rounded-lg border border-fence bg-[#0a0a0a]">
-            <div className="w-1.5 h-1.5 rounded-full bg-accent shrink-0 animate-pulse" />
-            <span className="text-xs text-muted font-mono">
-              Low-stock alert fires when{' '}
-              <span className="text-accent font-semibold">current_stock &lt; threshold</span>
-            </span>
-          </div>
-        </div>
-      </div>
-    </CardShell>
-  )
-}
-
-/* ─── Card 4: Engineering Approach ─────────────────────────────────────── */
+/* ─── Card 7: Engineering Approach (secondary) ──────────────────────────── */
 
 const PRINCIPLES = [
   { label: 'Secure by default', sub: 'Auth-first API design, no bolt-ons' },
@@ -560,27 +585,48 @@ export default function CaseStudies() {
         </p>
       </motion.div>
 
-      {/* Bento grid
-          Desktop: 3-col, 2-row
-            [Sauber  ←col-span-2→] [POS  ↑]
-            [Gaming ] [Approach  ] [POS  ↓]
-          Mobile: single column stacked
-      */}
+      {/* ── Featured projects ─────────────────────────────────────────────── */}
       <motion.div
-        className="grid grid-cols-1 md:grid-cols-3 gap-4"
         initial={{ opacity: 0, y: 32 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.08 }}
         transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
-        <SauberCard />
-        <POSCard />
-        <GamingShieldCard />
-        <ApproachCard />
-        <InventoryCard />
-        <RestockCard />
-        <FinancialCard />
+        <p className="text-[10px] text-dim font-mono uppercase tracking-widest mb-5">
+          — Featured Projects
+        </p>
+
+        {/*
+          Desktop layout (md:grid-cols-2):
+            [RestockCard ────── col-span-2, full width ──────]
+            [SauberCard        ] [FinancialCard              ]
+        */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-16">
+          <RestockCard />
+          <SauberCard />
+          <FinancialCard />
+        </div>
       </motion.div>
+
+      {/* ── Secondary projects ────────────────────────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.08 }}
+        transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+      >
+        <p className="text-[10px] text-dim font-mono uppercase tracking-widest mb-5">
+          — More Projects
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <POSCard />
+          <InventoryCard />
+          <GamingShieldCard />
+          <ApproachCard />
+        </div>
+      </motion.div>
+
     </section>
   )
 }
