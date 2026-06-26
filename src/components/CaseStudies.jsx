@@ -78,36 +78,35 @@ const MOVEMENT_TYPES = [
 
 function RestockCard() {
   return (
-    <CardShell className="md:col-span-2 p-6 gap-5">
+    <CardShell className="p-6 gap-5 justify-between">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-fence-active to-transparent" />
 
-      <img
-        src={`${import.meta.env.BASE_URL}images/restock-engine.webp`}
-        alt="Smart Supply Chain Restock Engine preview"
-        className="w-full aspect-video object-cover border border-white/10 rounded-lg"
-        loading="lazy"
-      />
+      {/* Top */}
+      <div className="space-y-4">
+        <img
+          src={`${import.meta.env.BASE_URL}images/restock-engine.webp`}
+          alt="Smart Supply Chain Restock Engine preview"
+          className="w-full aspect-video object-cover border border-white/10 rounded-lg"
+          loading="lazy"
+        />
 
-      <div className="grid md:grid-cols-2 gap-6">
-        {/* Left: description */}
-        <div>
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex flex-wrap items-center gap-2">
-              <Tag>Supply Chain</Tag>
-              <Tag variant="accent">● Auto-Alert</Tag>
-            </div>
-            <a href="#" className="text-faint hover:text-ink transition-colors shrink-0 ml-2" aria-label="View project">
-              <ArrowUpRight />
-            </a>
+        <div className="flex items-start justify-between">
+          <div className="flex flex-wrap items-center gap-2">
+            <Tag>Supply Chain</Tag>
+            <Tag variant="accent">● Auto-Alert</Tag>
           </div>
+          <a href="#" className="text-faint hover:text-ink transition-colors shrink-0 ml-2" aria-label="View project">
+            <ArrowUpRight />
+          </a>
+        </div>
 
+        <div>
           <h2 className="text-lg font-semibold text-ink tracking-tight mb-0.5">
             Restock &amp; Stock Movement System
           </h2>
-          <p className="text-xs text-dim font-mono mb-4">
+          <p className="text-xs text-dim font-mono mb-3">
             Atomic audit trail with automated low-stock alerts
           </p>
-
           <p className="text-sm text-muted leading-relaxed">
             Every stock mutation is wrapped in a{' '}
             <span className="text-[#c4c4c4]">MySQL transaction</span> with row-level
@@ -118,37 +117,37 @@ function RestockCard() {
             sub-threshold items and fires a summary email to the warehouse manager
             — zero manual monitoring required.
           </p>
+        </div>
+      </div>
 
-          <div className="mt-4 flex flex-wrap items-center gap-1.5">
-            {['Node.js', 'MySQL', 'node-cron', 'Nodemailer', 'Express'].map((t) => (
-              <Tag key={t}>{t}</Tag>
-            ))}
-            <GitHubButton href="https://github.com/sayid31/Restock_Engine" />
-          </div>
+      {/* Bottom */}
+      <div className="space-y-3">
+        <div className="space-y-1.5">
+          {MOVEMENT_TYPES.map(({ type, desc, color }) => (
+            <div
+              key={type}
+              className="flex items-center gap-3 px-3 py-2 rounded-lg bg-[#0a0a0a] border border-fence font-mono text-xs"
+            >
+              <span className={`${color} font-semibold w-[68px] shrink-0`}>{type}</span>
+              <span className="text-faint">→</span>
+              <span className="text-dim">{desc}</span>
+            </div>
+          ))}
         </div>
 
-        {/* Right: movement types + alert metric */}
-        <div className="flex flex-col gap-3 justify-center">
-          <div className="space-y-1.5">
-            {MOVEMENT_TYPES.map(({ type, desc, color }) => (
-              <div
-                key={type}
-                className="flex items-center gap-3 px-3 py-2 rounded-lg bg-[#0a0a0a] border border-fence font-mono text-xs"
-              >
-                <span className={`${color} font-semibold w-[68px] shrink-0`}>{type}</span>
-                <span className="text-faint">→</span>
-                <span className="text-dim">{desc}</span>
-              </div>
-            ))}
-          </div>
+        <div className="flex items-center gap-3 px-3.5 py-3 rounded-lg border border-fence bg-[#0a0a0a]">
+          <div className="w-1.5 h-1.5 rounded-full bg-accent shrink-0 animate-pulse" />
+          <span className="text-xs text-muted font-mono">
+            Low-stock alert fires when{' '}
+            <span className="text-accent font-semibold">current_stock &lt; threshold</span>
+          </span>
+        </div>
 
-          <div className="flex items-center gap-3 px-3.5 py-3 rounded-lg border border-fence bg-[#0a0a0a]">
-            <div className="w-1.5 h-1.5 rounded-full bg-accent shrink-0 animate-pulse" />
-            <span className="text-xs text-muted font-mono">
-              Low-stock alert fires when{' '}
-              <span className="text-accent font-semibold">current_stock &lt; threshold</span>
-            </span>
-          </div>
+        <div className="flex flex-wrap items-center gap-1.5">
+          {['Node.js', 'MySQL', 'node-cron', 'Nodemailer', 'Express'].map((t) => (
+            <Tag key={t}>{t}</Tag>
+          ))}
+          <GitHubButton href="https://github.com/sayid31/Restock_Engine" />
         </div>
       </div>
     </CardShell>
@@ -344,11 +343,17 @@ const POS_PAGES = [
 
 function POSCard() {
   return (
-    <CardShell className="p-6 gap-5 justify-between min-h-[300px]">
+    <CardShell className="p-6 gap-5 justify-between">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-fence-active to-transparent" />
 
       {/* Top */}
       <div>
+        <img
+          src={`${import.meta.env.BASE_URL}images/burger-pos.webp`}
+          alt="Burger POS System preview"
+          className="w-full aspect-video object-cover border border-white/10 rounded-lg mb-5"
+          loading="lazy"
+        />
         <div className="flex items-start justify-between mb-4">
           <Tag>Frontend</Tag>
           <a
@@ -420,10 +425,16 @@ function POSCard() {
 
 function InventoryCard() {
   return (
-    <CardShell className="p-6 gap-5 justify-between min-h-[280px]">
+    <CardShell className="p-6 gap-5 justify-between">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-fence-active to-transparent" />
 
       <div>
+        <img
+          src={`${import.meta.env.BASE_URL}images/inventory.webp`}
+          alt="Inventory Management System preview"
+          className="w-full aspect-video object-cover border border-white/10 rounded-lg mb-5"
+          loading="lazy"
+        />
         <div className="flex items-start justify-between mb-4">
           <div className="flex flex-wrap items-center gap-2">
             <Tag>Full-Stack</Tag>
@@ -601,7 +612,7 @@ export default function CaseStudies() {
             [RestockCard ────── col-span-2, full width ──────]
             [SauberCard        ] [FinancialCard              ]
         */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-16">
           <RestockCard />
           <SauberCard />
           <FinancialCard />
