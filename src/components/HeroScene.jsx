@@ -23,12 +23,15 @@ export default function HeroScene() {
     if (!el) return
 
     // ── Scene / camera ─────────────────────────────────────────
+    const w = window.innerWidth  || 1
+    const h = window.innerHeight || 1
+
     const scene  = new THREE.Scene()
-    const camera = new THREE.PerspectiveCamera(48, el.clientWidth / el.clientHeight, 0.1, 100)
+    const camera = new THREE.PerspectiveCamera(48, w / h, 0.1, 100)
     camera.position.z = 7
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'low-power' })
-    renderer.setSize(el.clientWidth, el.clientHeight)
+    renderer.setSize(w, h)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
     renderer.setClearColor(0x000000, 0)
     el.appendChild(renderer.domElement)
@@ -112,10 +115,11 @@ export default function HeroScene() {
 
     // ── Resize handler ─────────────────────────────────────────
     const onResize = () => {
-      if (!el) return
-      camera.aspect = el.clientWidth / el.clientHeight
+      const rw = window.innerWidth  || 1
+      const rh = window.innerHeight || 1
+      camera.aspect = rw / rh
       camera.updateProjectionMatrix()
-      renderer.setSize(el.clientWidth, el.clientHeight)
+      renderer.setSize(rw, rh)
     }
     window.addEventListener('resize', onResize)
 

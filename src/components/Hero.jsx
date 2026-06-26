@@ -1,7 +1,16 @@
-import { lazy, Suspense, useRef, useEffect, useState } from 'react'
+import { lazy, Suspense, useRef, useEffect, useState, Component } from 'react'
 import { motion, useInView } from 'framer-motion'
 
 const HeroScene = lazy(() => import('./HeroScene'))
+
+class SceneErrorBoundary extends Component {
+  state = { failed: false }
+  static getDerivedStateFromError() { return { failed: true } }
+  render() {
+    if (this.state.failed) return null
+    return this.props.children
+  }
+}
 
 // ── Animated counter — counts from 0 → target when scrolled into view ─────────
 
@@ -99,11 +108,13 @@ export default function Hero() {
         }}
       />
 
-      {/* Three.js scene — desktop only, lazy-loaded */}
+      {/* Three.js scene — desktop only, lazy-loaded, isolated from crash */}
       <div className="hidden md:block absolute inset-0 pointer-events-none">
-        <Suspense fallback={null}>
-          <HeroScene />
-        </Suspense>
+        <SceneErrorBoundary>
+          <Suspense fallback={null}>
+            <HeroScene />
+          </Suspense>
+        </SceneErrorBoundary>
       </div>
 
       {/* ── Content ────────────────────────────────────────────────────────── */}
