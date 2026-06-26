@@ -86,26 +86,26 @@ export default function Hero() {
         </p>
 
         {/* Primary actions */}
-        <div className="flex flex-wrap items-center gap-3 mb-16">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-3 mb-16">
           <a
             href="#work"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-ink text-canvas text-sm font-medium hover:bg-white transition-colors"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md bg-ink text-canvas text-sm font-medium hover:bg-white transition-colors"
           >
             View Case Studies
           </a>
           <a
             href="https://drive.google.com/file/d/19cWORvbj6cNXSzwqY2yznfVubL8bOt0Q/view?usp=sharing"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-fence-active text-muted text-sm font-medium hover:text-ink hover:border-faint transition-colors"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md border border-fence-active text-muted text-sm font-medium hover:text-ink hover:border-faint transition-colors"
           >
-            Read System Documentation
+            System Documentation
             <ArrowRight />
           </a>
         </div>
 
         {/* Stat bar */}
-        <div className="flex flex-wrap items-center divide-x divide-fence gap-y-5 pt-8 border-t border-fence">
+        <div className="grid grid-cols-2 gap-y-6 md:flex md:flex-wrap md:items-center md:divide-x md:divide-fence pt-8 border-t border-fence">
           {STATS.map((s) => (
-            <div key={s.label} className="px-6 first:pl-0 last:pr-0">
+            <div key={s.label} className="md:px-6 md:first:pl-0 md:last:pr-0">
               <div className="text-xl font-semibold text-ink font-mono tracking-tight">
                 {s.value}
               </div>
