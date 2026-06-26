@@ -1,8 +1,13 @@
+import { lazy, Suspense } from 'react'
+import { motion } from 'framer-motion'
+
+const HeroScene = lazy(() => import('./HeroScene'))
+
 const STATS = [
-  { value: '3+',       label: 'Systems Shipped'      },
-  { value: '2',        label: 'Engineering Domains'  },
-  { value: 'F → F',   label: 'Firmware to Frontend' },
-  { value: '100%',     label: 'Auth-First Design'    },
+  { value: '3+',     label: 'Systems Shipped'     },
+  { value: '2',      label: 'Engineering Domains'  },
+  { value: 'F → F', label: 'Firmware to Frontend' },
+  { value: '100%',   label: 'Auth-First Design'    },
 ]
 
 function ArrowRight() {
@@ -19,9 +24,17 @@ function ArrowRight() {
   )
 }
 
+// Factory: returns initial/animate/transition props for a fade-up motion element
+const up = (delay = 0) => ({
+  initial:    { opacity: 0, y: 22 },
+  animate:    { opacity: 1, y: 0 },
+  transition: { duration: 0.55, delay, ease: [0.25, 0.46, 0.45, 0.94] },
+})
+
 export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-start pt-14 overflow-hidden">
+
       {/* Dot-grid background */}
       <div className="absolute inset-0 dot-grid pointer-events-none" />
 
@@ -37,40 +50,45 @@ export default function Hero() {
       <div
         className="absolute pointer-events-none"
         style={{
-          top: '-160px',
-          left: '-80px',
-          width: '560px',
-          height: '560px',
+          top: '-160px', left: '-80px',
+          width: '560px', height: '560px',
           background: 'radial-gradient(circle, rgba(16,185,129,0.055) 0%, transparent 68%)',
         }}
       />
 
-      {/* Right-side depth glow — fills the empty space with subtle warmth */}
+      {/* Right depth glow */}
       <div
         className="absolute pointer-events-none"
         style={{
-          top: '10%',
-          right: '-120px',
-          width: '640px',
-          height: '640px',
+          top: '10%', right: '-120px',
+          width: '640px', height: '640px',
           background: 'radial-gradient(circle, rgba(99,102,241,0.04) 0%, rgba(16,185,129,0.025) 45%, transparent 70%)',
         }}
       />
 
+      {/* ── Three.js scene — desktop only, lazy-loaded ─────────────────────── */}
+      <div className="hidden md:block absolute inset-0 pointer-events-none">
+        <Suspense fallback={null}>
+          <HeroScene />
+        </Suspense>
+      </div>
+
+      {/* ── Content ──────────────────────────────────────────────────────────── */}
       <div className="relative max-w-6xl mx-auto px-6 pt-14 pb-28 w-full">
 
-        {/* Role chip */}
-        <div className="mb-8">
+        {/* Role chip — instant fade */}
+        <motion.div className="mb-8" {...up(0)}>
           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-fence bg-surface text-xs text-muted font-mono tracking-wide">
             <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
             Web Developer &amp; IoT Systems Engineer
           </span>
-        </div>
+        </motion.div>
 
         {/* Headline */}
-        <h1
+        <motion.h1
           className="font-semibold tracking-tighter text-ink leading-[1.07] mb-6 max-w-[18ch] text-balance"
           style={{ fontSize: 'clamp(2.6rem, 5.5vw, 4.75rem)' }}
+          {...up(0.1)}
         >
           Building End-to-End
           <br />
@@ -78,15 +96,18 @@ export default function Hero() {
           <span className="text-muted">
             Intelligent IoT Solutions.
           </span>
-        </h1>
+        </motion.h1>
 
         {/* Sub-headline */}
-        <p className="text-base md:text-[1.0625rem] text-muted leading-relaxed mb-10 max-w-[44ch]">
+        <motion.p
+          className="text-base md:text-[1.0625rem] text-muted leading-relaxed mb-10 max-w-[44ch]"
+          {...up(0.2)}
+        >
           I engineer comprehensive digital solutions—from designing intuitive, admin-focused monitoring dashboards to architecting secure Node.js APIs and bridging web platforms with hardware ecosystems.
-        </p>
+        </motion.p>
 
-        {/* Primary actions */}
-        <div className="flex flex-col sm:flex-row flex-wrap gap-3 mb-16">
+        {/* CTA buttons */}
+        <motion.div className="flex flex-col sm:flex-row flex-wrap gap-3 mb-16" {...up(0.3)}>
           <a
             href="#work"
             className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md bg-ink text-canvas text-sm font-medium hover:bg-white transition-colors"
@@ -100,19 +121,23 @@ export default function Hero() {
             System Documentation
             <ArrowRight />
           </a>
-        </div>
+        </motion.div>
 
-        {/* Stat bar */}
+        {/* Stat bar — each stat staggers in */}
         <div className="grid grid-cols-2 gap-y-6 md:flex md:flex-wrap md:items-center md:divide-x md:divide-fence pt-8 border-t border-fence">
-          {STATS.map((s) => (
-            <div key={s.label} className="md:px-6 md:first:pl-0 md:last:pr-0">
+          {STATS.map((s, i) => (
+            <motion.div
+              key={s.label}
+              className="md:px-6 md:first:pl-0 md:last:pr-0"
+              {...up(0.4 + i * 0.07)}
+            >
               <div className="text-xl font-semibold text-ink font-mono tracking-tight">
                 {s.value}
               </div>
               <div className="text-[11px] text-dim mt-0.5 tracking-wide uppercase">
                 {s.label}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

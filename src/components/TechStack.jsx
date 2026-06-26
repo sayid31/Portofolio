@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion'
+
 const GROUPS = [
   {
     domain: 'Backend & API',
@@ -63,12 +65,27 @@ function GroupCard({ domain, description, items }) {
   )
 }
 
+const cardVariants = {
+  hidden:  { opacity: 0, y: 24 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, delay: i * 0.12, ease: [0.25, 0.46, 0.45, 0.94] },
+  }),
+}
+
 export default function TechStack() {
   return (
     <section id="stack" className="max-w-6xl mx-auto px-6 py-24 border-t border-fence">
 
       {/* Section header */}
-      <div className="mb-10">
+      <motion.div
+        className="mb-10"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+      >
         <p className="text-xs text-dim font-mono uppercase tracking-widest mb-2">
           03 / Technical Depth
         </p>
@@ -78,16 +95,32 @@ export default function TechStack() {
         <p className="mt-2 text-sm text-muted max-w-[48ch] leading-relaxed">
           Grouped by domain. Every item is production-tested, not aspirational.
         </p>
-      </div>
+      </motion.div>
 
+      {/* Group cards — staggered */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {GROUPS.map((g) => (
-          <GroupCard key={g.domain} {...g} />
+        {GROUPS.map((g, i) => (
+          <motion.div
+            key={g.domain}
+            custom={i}
+            variants={cardVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            <GroupCard {...g} />
+          </motion.div>
         ))}
       </div>
 
-      {/* Bottom strip — architecture philosophy line */}
-      <div className="mt-6 flex flex-wrap items-center gap-4 px-5 py-4 rounded-xl border border-fence bg-card">
+      {/* Architecture philosophy strip */}
+      <motion.div
+        className="mt-6 flex flex-wrap items-center gap-4 px-5 py-4 rounded-xl border border-fence bg-card"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.5 }}
+        transition={{ duration: 0.6, delay: 0.35, ease: 'easeOut' }}
+      >
         <span className="text-[10px] text-dim font-mono uppercase tracking-widest shrink-0">
           Design Pattern
         </span>
@@ -103,7 +136,7 @@ export default function TechStack() {
             </span>
           ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   )
 }

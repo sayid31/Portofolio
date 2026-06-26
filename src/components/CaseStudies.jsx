@@ -1,3 +1,12 @@
+import { motion } from 'framer-motion'
+
+const inView = {
+  initial:    { opacity: 0, y: 28 },
+  whileInView:{ opacity: 1, y: 0  },
+  viewport:   { once: true, amount: 0.15 },
+  transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] },
+}
+
 /* ─── Shared primitives ──────────────────────────────────────────────────── */
 
 function Tag({ children, variant = 'default' }) {
@@ -536,7 +545,7 @@ export default function CaseStudies() {
     <section id="work" className="max-w-6xl mx-auto px-6 py-24">
 
       {/* Section header */}
-      <div className="flex items-end justify-between mb-10">
+      <motion.div className="flex items-end justify-between mb-10" {...inView}>
         <div>
           <p className="text-xs text-dim font-mono uppercase tracking-widest mb-2">
             02 / Featured Work
@@ -549,7 +558,7 @@ export default function CaseStudies() {
           Each project is framed around the problem it solves and
           the measurable outcome it delivers.
         </p>
-      </div>
+      </motion.div>
 
       {/* Bento grid
           Desktop: 3-col, 2-row
@@ -557,7 +566,13 @@ export default function CaseStudies() {
             [Gaming ] [Approach  ] [POS  ↓]
           Mobile: single column stacked
       */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-3 gap-4"
+        initial={{ opacity: 0, y: 32 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.08 }}
+        transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+      >
         <SauberCard />
         <POSCard />
         <GamingShieldCard />
@@ -565,7 +580,7 @@ export default function CaseStudies() {
         <InventoryCard />
         <RestockCard />
         <FinancialCard />
-      </div>
+      </motion.div>
     </section>
   )
 }
