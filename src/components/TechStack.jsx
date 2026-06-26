@@ -6,6 +6,7 @@ const GROUPS = [
       { name: 'Node.js',       role: 'Runtime & async I/O'       },
       { name: 'Express',       role: 'HTTP server framework'      },
       { name: 'MongoDB',       role: 'Document store & queries'   },
+      { name: 'PostgreSQL',    role: 'Relational DB & transactions'},
       { name: 'JWT Auth',      role: 'Stateless security layer'   },
       { name: 'RESTful API',   role: 'HTTP/JSON design patterns'  },
     ],
