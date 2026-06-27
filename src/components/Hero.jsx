@@ -145,9 +145,9 @@ export default function Hero() {
           className="text-base md:text-[1.0625rem] text-muted leading-relaxed mb-10 max-w-[44ch]"
           {...up(0.2)}
         >
-          Saya merancang solusi digital yang berfokus pada efisiensi—mulai dari
-          membangun dashboard pemantauan yang intuitif, merancang arsitektur API
-          Node.js yang aman, hingga menjembatani platform web dengan sistem perangkat keras (IoT).
+          Saya merancang solusi digital secara komprehensif—mulai dari membangun
+          dashboard pemantauan yang intuitif, merancang arsitektur API Node.js yang
+          aman, hingga menjembatani platform web dengan ekosistem hardware (IoT).
         </motion.p>
 
         {/* CTA buttons */}

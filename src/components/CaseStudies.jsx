@@ -49,7 +49,7 @@ function GitHubButton({ href }) {
       className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-fence bg-[#161616] text-dim hover:text-ink hover:border-fence-active transition-colors duration-200 font-mono text-[10px] font-medium"
     >
       <GitHubIcon className="w-3 h-3" />
-      View Code
+      Lihat Kode
     </a>
   )
 }
@@ -71,9 +71,9 @@ function CardShell({ children, className = '', accentLine = false }) {
 /* ─── Card 1: Restock / Stock Movement System (featured, full-width) ────── */
 
 const MOVEMENT_TYPES = [
-  { type: 'INBOUND',  desc: 'stock increases',   color: 'text-accent'     },
-  { type: 'OUTBOUND', desc: 'stock decreases',    color: 'text-red-400'    },
-  { type: 'RELOCATE', desc: 'location updates',   color: 'text-yellow-500' },
+  { type: 'INBOUND',  desc: 'stok bertambah',    color: 'text-accent'     },
+  { type: 'OUTBOUND', desc: 'stok berkurang',     color: 'text-red-400'    },
+  { type: 'RELOCATE', desc: 'pembaruan lokasi',   color: 'text-yellow-500' },
 ]
 
 function RestockCard() {
@@ -105,7 +105,7 @@ function RestockCard() {
             Restock &amp; Stock Movement System
           </h2>
           <p className="text-xs text-dim font-mono mb-3">
-            Atomic audit trail with automated low-stock alerts
+            Audit trail presisi dengan peringatan stok otomatis
           </p>
           <p className="text-sm text-muted leading-relaxed">
             Every stock mutation is wrapped in a{' '}
@@ -138,7 +138,7 @@ function RestockCard() {
         <div className="flex items-center gap-3 px-3.5 py-3 rounded-lg border border-fence bg-[#0a0a0a]">
           <div className="w-1.5 h-1.5 rounded-full bg-accent shrink-0 animate-pulse" />
           <span className="text-xs text-muted font-mono">
-            Low-stock alert fires when{' '}
+            Peringatan stok menipis terpicu saat{' '}
             <span className="text-accent font-semibold">current_stock &lt; threshold</span>
           </span>
         </div>
@@ -335,10 +335,10 @@ function FinancialCard() {
 /* ─── Card 4: Burger POS System (secondary) ─────────────────────────────── */
 
 const POS_PAGES = [
-  { page: 'index.html',     label: 'Customer Menu & Cart',  color: 'text-accent'     },
-  { page: 'dashboard.html', label: 'Sales Dashboard',       color: 'text-blue-400'   },
-  { page: 'inventory.html', label: 'Inventory Management',  color: 'text-yellow-500' },
-  { page: 'orders.html',    label: 'Order Tracking',        color: 'text-faint'      },
+  { page: 'index.html',     label: 'Menu Pelanggan & Keranjang', color: 'text-accent'     },
+  { page: 'dashboard.html', label: 'Dashboard Penjualan',        color: 'text-blue-400'   },
+  { page: 'inventory.html', label: 'Manajemen Inventori',        color: 'text-yellow-500' },
+  { page: 'orders.html',    label: 'Pelacakan Pesanan',          color: 'text-faint'      },
 ]
 
 function POSCard() {
@@ -371,16 +371,16 @@ function POSCard() {
           Burger POS System
         </h2>
         <p className="text-xs text-dim font-mono mb-4">
-          Frontend point-of-sale &amp; admin dashboard
+          Frontend point-of-sale &amp; dashboard admin
         </p>
 
         <p className="text-sm text-muted leading-relaxed">
-          Full-featured POS UI built in{' '}
-          <span className="text-[#c4c4c4]">Vanilla JS</span> — customer ordering
-          with cart, checkout modal, and payment method selection. Admin side
-          covers a <span className="text-[#c4c4c4]">Chart.js dashboard</span>{' '}
-          (sales trend + peak hours), inventory CRUD, promo, and sales reporting.
-          No backend yet.
+          UI POS dengan fitur lengkap dibangun menggunakan{' '}
+          <span className="text-[#c4c4c4]">Vanilla JS</span> — pemesanan pelanggan
+          dengan keranjang, modal checkout, dan metode pembayaran. Sisi admin mencakup{' '}
+          <span className="text-[#c4c4c4]">dashboard Chart.js</span>{' '}
+          (tren penjualan + jam sibuk), CRUD inventori, promo, dan laporan penjualan.
+          Belum terhubung dengan backend.
         </p>
 
         {/* Page manifest */}
@@ -449,14 +449,14 @@ function InventoryCard() {
           Inventory Management System
         </h2>
         <p className="text-xs text-dim font-mono mb-4">
-          Warehouse item tracking &amp; control
+          Pelacakan &amp; kontrol barang gudang
         </p>
 
         <p className="text-sm text-muted leading-relaxed">
-          SKU-based warehouse inventory with{' '}
-          <span className="text-[#c4c4c4]">role-based JWT auth</span>, category
-          filtering, search, and multi-location tracking. Admin-gated mutations
-          with paginated item queries.
+          Sistem inventori gudang berbasis SKU dengan{' '}
+          <span className="text-[#c4c4c4]">autentikasi JWT berdasarkan role</span>,
+          pemfilteran kategori, pencarian, dan pelacakan multi-lokasi. Mutasi data
+          dibatasi hanya untuk admin.
         </p>
       </div>
 
@@ -501,14 +501,13 @@ function GamingShieldCard() {
           Gaming Liquid Shield
         </h2>
         <p className="text-xs text-dim font-mono mb-4">
-          Thermal engineering &amp; mechanical design
+          Rekayasa termal &amp; desain mekanikal
         </p>
 
         <p className="text-sm text-muted leading-relaxed">
-          Custom-engineered liquid cooling solution designed to eliminate thermal
-          throttling in high-performance gaming systems. Addresses heat
-          dissipation at the hardware layer, sustaining peak clock speeds under
-          sustained computational load.
+          Solusi pendingin cair kustom yang dirancang untuk mencegah thermal
+          throttling pada sistem gaming performa tinggi. Fokus pada pembuangan
+          panas di tingkat hardware untuk menjaga clock speed tetap stabil.
         </p>
       </div>
 
@@ -517,8 +516,8 @@ function GamingShieldCard() {
         <div className="mb-3 flex items-center gap-3 px-3.5 py-3 rounded-lg border border-fence bg-[#0a0a0a]">
           <div className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
           <span className="text-xs text-muted font-mono">
-            Thermal throttle events:{' '}
-            <span className="text-accent font-semibold">0%</span> under sustained load
+            Kejadian thermal throttle:{' '}
+            <span className="text-accent font-semibold">0%</span> saat beban kerja berat
           </span>
         </div>
 
@@ -535,9 +534,9 @@ function GamingShieldCard() {
 /* ─── Card 7: Engineering Approach (secondary) ──────────────────────────── */
 
 const PRINCIPLES = [
-  { label: 'Secure by default', sub: 'Auth-first API design, no bolt-ons' },
-  { label: 'Hardware ↔ Software', sub: 'Cross-domain integration fluency' },
-  { label: 'Measurable outcomes', sub: 'Performance over aesthetic decisions' },
+  { label: 'Aman secara default',         sub: 'Desain API Auth-first, bukan sekadar tambahan'              },
+  { label: 'Integrasi Hardware ↔ Software', sub: 'Kefasihan integrasi lintas disiplin ilmu'                 },
+  { label: 'Hasil yang terukur',           sub: 'Performa lebih diutamakan daripada sekadar estetika'       },
 ]
 
 function ApproachCard() {
@@ -545,11 +544,11 @@ function ApproachCard() {
     <CardShell className="p-6 gap-5 justify-between min-h-[280px]">
       <div>
         <div className="text-[10px] text-dim font-mono uppercase tracking-widest mb-4">
-          Engineering Philosophy
+          Filosofi Rekayasa
         </div>
 
         <blockquote className="text-sm text-[#c4c4c4] leading-relaxed mb-6 border-l-2 border-accent/50 pl-3.5">
-          "Systems that work under real-world conditions, not just in demos."
+          "Sistem yang bekerja di kondisi dunia nyata, bukan sekadar demo."
         </blockquote>
 
         <ul className="space-y-3.5">
@@ -584,15 +583,15 @@ export default function CaseStudies() {
       <motion.div className="flex items-end justify-between mb-10" {...inView}>
         <div>
           <p className="text-xs text-dim font-mono uppercase tracking-widest mb-2">
-            02 / Featured Work
+            02 / Karya Unggulan
           </p>
           <h2 className="text-2xl md:text-3xl font-semibold text-ink tracking-tight">
-            Engineering Case Studies
+            Studi Kasus Proyek
           </h2>
         </div>
         <p className="hidden md:block text-sm text-muted max-w-[32ch] text-right leading-relaxed">
-          Each project is framed around the problem it solves and
-          the measurable outcome it delivers.
+          Setiap proyek dirancang untuk memecahkan masalah spesifik
+          dan memberikan hasil yang terukur.
         </p>
       </motion.div>
 
@@ -604,7 +603,7 @@ export default function CaseStudies() {
         transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <p className="text-[10px] text-dim font-mono uppercase tracking-widest mb-5">
-          — Featured Projects
+          — Proyek Unggulan
         </p>
 
         {/*
@@ -627,7 +626,7 @@ export default function CaseStudies() {
         transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <p className="text-[10px] text-dim font-mono uppercase tracking-widest mb-5">
-          — More Projects
+          — Proyek Tambahan
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

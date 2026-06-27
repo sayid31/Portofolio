@@ -9,11 +9,11 @@ const GROUPS = [
     description: 'Arsitektur server, pemodelan data, dan keamanan sistem.',
     items: [
       { name: 'Node.js',       role: 'Runtime & async I/O'        },
-      { name: 'Express',       role: 'HTTP server framework'       },
-      { name: 'MongoDB',       role: 'Document store & queries'    },
-      { name: 'PostgreSQL',    role: 'Relational DB & transactions' },
-      { name: 'JWT Auth',      role: 'Stateless security layer'    },
-      { name: 'RESTful API',   role: 'HTTP/JSON design patterns'   },
+      { name: 'Express',       role: 'Framework server HTTP'        },
+      { name: 'MongoDB',       role: 'Penyimpanan dokumen & query'  },
+      { name: 'PostgreSQL',    role: 'Database relasional & transaksi' },
+      { name: 'JWT Auth',      role: 'Lapisan keamanan stateless'   },
+      { name: 'RESTful API',   role: 'Pola desain HTTP/JSON'        },
     ],
   },
   {
@@ -22,19 +22,19 @@ const GROUPS = [
     items: [
       { name: 'React.js',      role: 'Component UI runtime'    },
       { name: 'Vite',          role: 'Build tooling & HMR'     },
-      { name: 'Tailwind CSS',  role: 'Utility-first styling'   },
-      { name: 'JavaScript ES+',role: 'Language runtime'        },
+      { name: 'Tailwind CSS',  role: 'Styling utility-first'              },
+      { name: 'JavaScript ES+',role: 'Runtime bahasa pemrograman'        },
     ],
   },
   {
     domain: 'Embedded & IoT',
     description: 'Pemrograman firmware, sistem kontrol, dan integrasi hardware.',
     items: [
-      { name: 'Arduino Uno',   role: 'Microcontroller platform'    },
-      { name: 'Fuzzy Logic',   role: 'Control system algorithm'    },
-      { name: 'C++ Firmware',  role: 'Embedded code execution'     },
-      { name: 'Sensor I/O',    role: 'Signal acquisition & ADC'    },
-      { name: 'PWM Control',   role: 'Actuator duty-cycle driving'  },
+      { name: 'Arduino Uno',   role: 'Platform mikrokontroler'      },
+      { name: 'Fuzzy Logic',   role: 'Algoritma sistem kontrol'     },
+      { name: 'C++ Firmware',  role: 'Eksekusi kode embedded'       },
+      { name: 'Sensor I/O',    role: 'Akuisisi sinyal & ADC'        },
+      { name: 'PWM Control',   role: 'Kontrol aktuator & duty-cycle' },
     ],
   },
 ]
@@ -137,7 +137,7 @@ export default function TechStack() {
           Teknologi &amp; Arsitektur
         </h2>
         <p className="mt-2 text-sm text-muted max-w-[48ch] leading-relaxed">
-          Dikelompokkan berdasarkan bidang. Semua teknologi ini telah saya gunakan langsung dalam proyek nyata, bukan sekadar eksperimen.
+          Dikelompokkan berdasarkan bidang. Semua teknologi ini telah digunakan pada proyek nyata, bukan sekadar eksperimen.
         </p>
       </motion.div>
 
@@ -190,10 +190,10 @@ export default function TechStack() {
             Tingkat Keahlian
           </p>
           <h3 className="text-base font-semibold text-ink">
-            Fokus Utama
+            Area Fokus Utama
           </h3>
           <p className="text-xs text-dim mt-1 max-w-[42ch]">
-            Distribusi keahlian berdasarkan intensitas penggunaan di berbagai proyek yang telah saya selesaikan.
+            Distribusi keahlian antar disiplin ilmu — berdasarkan proyek yang telah rilis, bukan sekadar penilaian subjektif.
           </p>
         </div>
 
