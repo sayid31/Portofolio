@@ -137,7 +137,7 @@ export default function TechStack() {
           Teknologi &amp; Arsitektur
         </h2>
         <p className="mt-2 text-sm text-muted max-w-[48ch] leading-relaxed">
-          Dikelompokkan berdasarkan bidang. Semua teknologi ini telah digunakan pada proyek nyata, bukan sekadar eksperimen.
+          Dikelompokkan berdasarkan bidang. Semua teknologi ini diimplementasikan dengan standar arsitektur produksi, baik pada sistem riil maupun studi kasus mandiri tingkat lanjut.
         </p>
       </motion.div>
 
