@@ -108,14 +108,14 @@ function RestockCard() {
             Audit trail presisi dengan peringatan stok otomatis
           </p>
           <p className="text-sm text-muted leading-relaxed">
-            Every stock mutation is wrapped in a{' '}
-            <span className="text-[#c4c4c4]">MySQL transaction</span> with row-level
-            locking (<span className="text-accent font-mono">FOR UPDATE</span>) to
-            prevent race conditions under concurrent load. Immutable audit log
-            captures before/after snapshots on every movement. A{' '}
-            <span className="text-[#c4c4c4]">node-cron job</span> scans for
-            sub-threshold items and fires a summary email to the warehouse manager
-            — zero manual monitoring required.
+            Setiap mutasi stok dibungkus dalam{' '}
+            <span className="text-[#c4c4c4]">transaksi MySQL</span> dengan row-level
+            locking (<span className="text-accent font-mono">FOR UPDATE</span>) untuk
+            mencegah race conditions saat beban tinggi. Log audit yang immutable
+            menangkap snapshot data sebelum/sesudah pada setiap pergerakan barang. Job{' '}
+            <span className="text-[#c4c4c4]">node-cron</span> memindai barang dengan
+            stok di bawah batas minimal dan otomatis mengirimkan email ringkasan ke
+            manajer gudang — sama sekali tidak memerlukan pemantauan manual.
           </p>
         </div>
       </div>
@@ -290,17 +290,18 @@ function FinancialCard() {
             SaaS Break-Even Point Calculator
           </h2>
           <p className="text-xs text-dim font-mono mb-4">
-            AI-powered financial forecasting API
+            API peramalan keuangan berbasis AI
           </p>
 
           <p className="text-sm text-muted leading-relaxed max-w-lg">
-            Full financial projection engine computing{' '}
-            <span className="text-[#c4c4c4]">Break-Even Point</span> via
-            contribution margin analysis. Results persist atomically via{' '}
+            Mesin proyeksi keuangan yang menghitung{' '}
+            <span className="text-[#c4c4c4]">Break-Even Point</span> (BEP) melalui
+            analisis contribution margin. Hasil kalkulasi disimpan secara atomik melalui{' '}
             <span className="text-blue-400 font-mono">Prisma.$transaction()</span>{' '}
-            — no orphaned records on failure. Versioned API{' '}
-            <span className="text-blue-400 font-mono">/api/v1/</span> for
-            non-breaking evolution.
+            — memastikan tidak ada data yang corrupt/terbengkalai jika terjadi kegagalan
+            sistem. API menggunakan sistem versi ({' '}
+            <span className="text-blue-400 font-mono">/api/v1/</span>) untuk mendukung
+            pembaruan tanpa merusak integrasi yang sudah berjalan.
           </p>
         </div>
       </div>
