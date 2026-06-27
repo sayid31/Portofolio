@@ -6,8 +6,8 @@ import { motion, useInView } from 'framer-motion'
 const SCRIPT = [
   { cmd: true,  text: 'whoami'                                         },
   { cmd: false, text: 'Muhamad Sayid · Full-Stack & IoT Engineer'      },
-  { cmd: true,  text: 'cat availability.txt'                           },
-  { cmd: false, text: 'Open to work · responds within 24 h'            },
+  { cmd: true,  text: 'cat ketersediaan.txt'                           },
+  { cmd: false, text: 'Terbuka untuk peluang baru · membalas dalam 24 jam' },
   { cmd: true,  text: 'git log --oneline -3'                           },
   { cmd: false, text: 'cd0d567  feat: Three.js + Framer Motion'        },
   { cmd: false, text: '9bda695  fix: responsive layout polish'          },
@@ -136,7 +136,7 @@ function ActivityHeatmap() {
   return (
     <div ref={ref}>
       <p className="text-[11px] text-dim font-mono uppercase tracking-widest mb-3">
-        Development Activity
+        Aktivitas Pengembangan
       </p>
 
       {/* Month labels */}
@@ -198,11 +198,11 @@ function ActivityHeatmap() {
 
       {/* Legend */}
       <div className="flex items-center gap-1.5 mt-3 justify-end">
-        <span className="text-[9px] text-faint font-mono">Less</span>
+        <span className="text-[9px] text-faint font-mono">Sedikit</span>
         {CELL_COLORS.map((c, i) => (
           <div key={i} className={`w-2.5 h-2.5 rounded-[2px] ${c}`} />
         ))}
-        <span className="text-[9px] text-faint font-mono">More</span>
+        <span className="text-[9px] text-faint font-mono">Banyak</span>
       </div>
     </div>
   )
@@ -211,9 +211,9 @@ function ActivityHeatmap() {
 // ── Contact links ─────────────────────────────────────────────────────────────
 
 const LINKS = [
-  { label: 'GitHub',   href: 'https://github.com/sayid31',                       desc: 'Source code & contributions'  },
-  { label: 'LinkedIn', href: 'https://linkedin.com/in/muhamad-sayid-amannulloh', desc: 'Professional history'          },
-  { label: 'Email',    href: 'mailto:muhamadsayidamanulloh@email.com',            desc: 'Direct line — preferred'       },
+  { label: 'GitHub',   href: 'https://github.com/sayid31',                       desc: 'Kode sumber & kontribusi'  },
+  { label: 'LinkedIn', href: 'https://linkedin.com/in/muhamad-sayid-amannulloh', desc: 'Riwayat profesional'        },
+  { label: 'Email',    href: 'mailto:muhamadsayidamanulloh@email.com',            desc: 'Jalur komunikasi utama'     },
 ]
 
 function ExternalIcon() {
@@ -250,16 +250,16 @@ export default function Contact() {
         >
           <div>
             <p className="text-xs text-dim font-mono uppercase tracking-widest mb-2">
-              04 / Reach Out
+              04 / Kontak
             </p>
             <h2 className="text-2xl md:text-3xl font-semibold text-ink tracking-tight mb-4">
-              Let&apos;s build something
+              Mari bangun sistem
               <br />
-              <span className="text-muted">that actually ships.</span>
+              <span className="text-muted">yang siap digunakan.</span>
             </h2>
             <p className="text-sm text-muted leading-relaxed max-w-[40ch]">
-              Open to backend engineering roles, IoT consulting, and full-stack
-              contracts. I respond to well-scoped briefs within 24 hours.
+              Saya terbuka untuk posisi Backend Engineer, Full-Stack, maupun proyek IoT.
+              Silakan sampaikan kebutuhan Anda, saya akan membalas dalam waktu 24 jam.
             </p>
 
             <div className="mt-6 flex items-center gap-2 px-4 py-3 rounded-lg border border-fence bg-card w-fit">
@@ -268,7 +268,7 @@ export default function Contact() {
                 style={{ boxShadow: '0 0 0 2.5px rgba(16,185,129,0.18)' }}
               />
               <span className="text-xs text-accent font-medium">
-                Available for new opportunities
+                Terbuka untuk peluang baru
               </span>
             </div>
           </div>

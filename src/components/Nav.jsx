@@ -11,9 +11,9 @@ export default function Nav() {
   }, [])
 
   const links = [
-    { label: 'Work',    href: '#work'    },
-    { label: 'Stack',   href: '#stack'   },
-    { label: 'Contact', href: '#contact' },
+    { label: 'Proyek',    href: '#work'    },
+    { label: 'Keahlian',  href: '#stack'   },
+    { label: 'Kontak',    href: '#contact' },
   ]
 
   return (
@@ -57,7 +57,7 @@ export default function Nav() {
               className="w-1.5 h-1.5 rounded-full bg-accent shrink-0"
               style={{ boxShadow: '0 0 0 2.5px rgba(16,185,129,0.18)' }}
             />
-            <span className="text-xs text-accent font-medium">Available</span>
+            <span className="text-xs text-accent font-medium">Terbuka untuk Peluang</span>
           </div>
 
           {/* Hamburger — mobile only */}
@@ -89,7 +89,7 @@ export default function Nav() {
             ))}
             <div className="flex items-center gap-2 pt-3">
               <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
-              <span className="text-xs text-accent font-medium">Available for opportunities</span>
+              <span className="text-xs text-accent font-medium">Terbuka untuk peluang baru</span>
             </div>
           </div>
         </div>

@@ -6,7 +6,7 @@ import { motion, useInView } from 'framer-motion'
 const GROUPS = [
   {
     domain: 'Backend & API',
-    description: 'Server-side architecture, data modelling, and security.',
+    description: 'Arsitektur server, pemodelan data, dan keamanan sistem.',
     items: [
       { name: 'Node.js',       role: 'Runtime & async I/O'        },
       { name: 'Express',       role: 'HTTP server framework'       },
@@ -18,7 +18,7 @@ const GROUPS = [
   },
   {
     domain: 'Frontend & UI',
-    description: 'Component-driven interfaces built for real users.',
+    description: 'Pengembangan antarmuka interaktif yang berpusat pada pengguna.',
     items: [
       { name: 'React.js',      role: 'Component UI runtime'    },
       { name: 'Vite',          role: 'Build tooling & HMR'     },
@@ -28,7 +28,7 @@ const GROUPS = [
   },
   {
     domain: 'Embedded & IoT',
-    description: 'Firmware, control systems, and hardware-software bridges.',
+    description: 'Pemrograman firmware, sistem kontrol, dan integrasi hardware.',
     items: [
       { name: 'Arduino Uno',   role: 'Microcontroller platform'    },
       { name: 'Fuzzy Logic',   role: 'Control system algorithm'    },
@@ -131,13 +131,13 @@ export default function TechStack() {
         transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <p className="text-xs text-dim font-mono uppercase tracking-widest mb-2">
-          03 / Technical Depth
+          03 / Kedalaman Teknis
         </p>
         <h2 className="text-2xl md:text-3xl font-semibold text-ink tracking-tight">
-          Stack &amp; Architecture
+          Teknologi &amp; Arsitektur
         </h2>
         <p className="mt-2 text-sm text-muted max-w-[48ch] leading-relaxed">
-          Grouped by domain. Every item is production-tested, not aspirational.
+          Dikelompokkan berdasarkan bidang. Semua teknologi ini telah saya gunakan langsung dalam proyek nyata, bukan sekadar eksperimen.
         </p>
       </motion.div>
 
@@ -166,7 +166,7 @@ export default function TechStack() {
         transition={{ duration: 0.6, delay: 0.35, ease: 'easeOut' }}
       >
         <span className="text-[10px] text-dim font-mono uppercase tracking-widest shrink-0">
-          Design Pattern
+          Pola Desain
         </span>
         <div className="flex flex-wrap items-center gap-1.5 text-xs font-mono text-muted">
           {['Controller', '→', 'Service', '→', 'Repository', '→', 'Database'].map((node, i) => (
@@ -187,13 +187,13 @@ export default function TechStack() {
       >
         <div className="mb-6">
           <p className="text-xs text-dim font-mono uppercase tracking-widest mb-1">
-            Proficiency
+            Tingkat Keahlian
           </p>
           <h3 className="text-base font-semibold text-ink">
-            Focus Areas
+            Fokus Utama
           </h3>
           <p className="text-xs text-dim mt-1 max-w-[42ch]">
-            Relative depth across disciplines — based on shipped projects, not self-assessment alone.
+            Distribusi keahlian berdasarkan intensitas penggunaan di berbagai proyek yang telah saya selesaikan.
           </p>
         </div>
 

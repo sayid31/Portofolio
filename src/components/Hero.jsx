@@ -47,10 +47,10 @@ function AnimatedCounter({ to, suffix = '', delay = 0 }) {
 // ── Stats data — numeric entries use AnimatedCounter ──────────────────────────
 
 const STATS = [
-  { num: 3,    suffix: '+',  label: 'Systems Shipped'     },
-  { num: 2,    suffix: '',   label: 'Engineering Domains'  },
-  { text: 'F→F',             label: 'Firmware to Frontend' },
-  { num: 100,  suffix: '%',  label: 'Auth-First Design'    },
+  { num: 3,    suffix: '+',  label: 'Sistem Dirilis'       },
+  { num: 2,    suffix: '',   label: 'Fokus Bidang'         },
+  { text: 'F→F',             label: 'Firmware ke Frontend' },
+  { num: 100,  suffix: '%',  label: 'Desain Auth-First'    },
 ]
 
 function ArrowRight() {
@@ -124,7 +124,7 @@ export default function Hero() {
         <motion.div className="mb-8" {...up(0)}>
           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-fence bg-surface text-xs text-muted font-mono tracking-wide">
             <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
-            Web Developer &amp; IoT Systems Engineer
+            Web Developer &amp; IoT Engineer
           </span>
         </motion.div>
 
@@ -134,10 +134,10 @@ export default function Hero() {
           style={{ fontSize: 'clamp(2.6rem, 5.5vw, 4.75rem)' }}
           {...up(0.1)}
         >
-          Building End-to-End
+          Membangun Aplikasi Web
           <br />
-          Web Applications &amp;{' '}
-          <span className="text-muted">Intelligent IoT Solutions.</span>
+          End-to-End &amp;{' '}
+          <span className="text-muted">Solusi IoT Terintegrasi.</span>
         </motion.h1>
 
         {/* Sub-headline */}
@@ -145,9 +145,9 @@ export default function Hero() {
           className="text-base md:text-[1.0625rem] text-muted leading-relaxed mb-10 max-w-[44ch]"
           {...up(0.2)}
         >
-          I engineer comprehensive digital solutions—from designing intuitive,
-          admin-focused monitoring dashboards to architecting secure Node.js APIs
-          and bridging web platforms with hardware ecosystems.
+          Saya merancang solusi digital yang berfokus pada efisiensi—mulai dari
+          membangun dashboard pemantauan yang intuitif, merancang arsitektur API
+          Node.js yang aman, hingga menjembatani platform web dengan sistem perangkat keras (IoT).
         </motion.p>
 
         {/* CTA buttons */}
@@ -156,13 +156,13 @@ export default function Hero() {
             href="#work"
             className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md bg-ink text-canvas text-sm font-medium hover:bg-white transition-colors"
           >
-            View Case Studies
+            Lihat Proyek
           </a>
           <a
             href="https://drive.google.com/file/d/19cWORvbj6cNXSzwqY2yznfVubL8bOt0Q/view?usp=sharing"
             className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md border border-fence-active text-muted text-sm font-medium hover:text-ink hover:border-faint transition-colors"
           >
-            System Documentation
+            Dokumentasi Sistem
             <ArrowRight />
           </a>
         </motion.div>
