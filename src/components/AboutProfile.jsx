@@ -121,7 +121,7 @@ export default function AboutProfile() {
           <div className="shrink-0 mx-auto md:mx-0">
             <div className="relative">
               <img
-                src="/images/profile.webp"
+                src={`${import.meta.env.BASE_URL}images/profile.webp`}
                 alt="Muhamad Sayid Amanulloh"
                 loading="lazy"
                 className="w-28 h-28 md:w-36 md:h-36 rounded-2xl object-cover border border-fence-active"
