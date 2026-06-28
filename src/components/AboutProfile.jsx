@@ -150,17 +150,18 @@ export default function AboutProfile() {
             {/* Short bio */}
             <p className="text-sm text-muted leading-relaxed mb-6 max-w-[62ch]">
               Engineer berlatar belakang{' '}
-              <span className="text-[#c4c4c4]">Rekayasa Sistem Komputer</span> yang
-              terbiasa mengelola pengembangan dari level firmware hingga API produksi.
-              Saya mengambil ownership penuh atas setiap keputusan teknis—dari perancangan
-              arsitektur, pola transaksi database, hingga strategi deployment yang
-              memastikan sistem tetap andal di kondisi nyata.{' '}
-              Domain utama saya mencakup{' '}
+              <span className="text-[#c4c4c4]">Rekayasa Sistem Komputer</span>, saya
+              terbiasa mengelola pengembangan sistem secara utuh—dari penulisan firmware
+              perangkat keras hingga pembuatan API skala produksi. Saya menangani sistem
+              secara end-to-end dan bertanggung jawab atas setiap keputusan teknis; mulai
+              dari perancangan arsitektur, pengelolaan transaksi database, hingga strategi
+              deployment untuk memastikan aplikasi berjalan stabil di lapangan. Fokus
+              keahlian saya mencakup integrasi{' '}
               <span className="text-accent font-mono">embedded IoT</span>{' '}
-              (ESP32, real-time control logic) dan Full-Stack web{' '}
-              (<span className="text-[#c4c4c4]">Node.js</span>, REST API, React)—dengan
-              penekanan kuat pada keandalan sistem, keamanan data, dan hasil yang terukur
-              secara bisnis.
+              (ESP32, real-time control logic) dan pengembangan Full-Stack Web{' '}
+              (<span className="text-[#c4c4c4]">Node.js</span>, REST API, React), dengan
+              penekanan pada keamanan data serta solusi yang memberikan efisiensi nyata
+              bagi bisnis.
             </p>
 
             {/* Social links */}
