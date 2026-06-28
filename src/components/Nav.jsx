@@ -13,6 +13,7 @@ export default function Nav() {
   const links = [
     { label: 'Proyek',    href: '#work'    },
     { label: 'Keahlian',  href: '#stack'   },
+    { label: 'Profil',    href: '#profile' },
     { label: 'Kontak',    href: '#contact' },
   ]
 

@@ -77,7 +77,7 @@ const SOCIAL_LINKS = [
 
 export default function AboutProfile() {
   return (
-    <section id="about" className="max-w-6xl mx-auto px-6 py-24 border-t border-fence">
+    <section id="profile" className="max-w-6xl mx-auto px-6 py-24 border-t border-fence">
 
       {/* Section label */}
       <motion.div
@@ -149,15 +149,18 @@ export default function AboutProfile() {
 
             {/* Short bio */}
             <p className="text-sm text-muted leading-relaxed mb-6 max-w-[62ch]">
-              Halo! Panggil saya Sayid. Dengan latar belakang pendidikan di bidang{' '}
-              <span className="text-[#c4c4c4]">Rekayasa Sistem Komputer</span>, saya
-              menaruh fokus mendalam pada pengembangan sistem terintegrasi. Saya merancang
-              solusi digital secara komprehensif—mulai dari memprogram firmware di level
-              perangkat keras{' '}
-              <span className="text-accent font-mono">(IoT)</span> hingga membangun
-              arsitektur backend{' '}
-              <span className="text-[#c4c4c4]">Node.js</span> yang aman untuk memproses
-              data secara real-time.
+              Engineer berlatar belakang{' '}
+              <span className="text-[#c4c4c4]">Rekayasa Sistem Komputer</span> yang
+              terbiasa mengelola pengembangan dari level firmware hingga API produksi.
+              Saya mengambil ownership penuh atas setiap keputusan teknis—dari perancangan
+              arsitektur, pola transaksi database, hingga strategi deployment yang
+              memastikan sistem tetap andal di kondisi nyata.{' '}
+              Domain utama saya mencakup{' '}
+              <span className="text-accent font-mono">embedded IoT</span>{' '}
+              (ESP32, real-time control logic) dan Full-Stack web{' '}
+              (<span className="text-[#c4c4c4]">Node.js</span>, REST API, React)—dengan
+              penekanan kuat pada keandalan sistem, keamanan data, dan hasil yang terukur
+              secara bisnis.
             </p>
 
             {/* Social links */}
