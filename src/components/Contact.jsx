@@ -250,7 +250,7 @@ export default function Contact() {
         >
           <div>
             <p className="text-xs text-dim font-mono uppercase tracking-widest mb-2">
-              04 / Kontak
+              05 / Kontak
             </p>
             <h2 className="text-2xl md:text-3xl font-semibold text-ink tracking-tight mb-4">
               Mari bangun sistem
