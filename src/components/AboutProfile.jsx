@@ -63,12 +63,12 @@ const SOCIAL_LINKS = [
   },
   {
     label: 'Facebook',
-    href:  '#',
+    href:  'https://www.facebook.com/share/1JfKmMheAU/',
     Icon:  FacebookIcon,
   },
   {
     label: 'Instagram',
-    href:  '#',
+    href:  'https://www.instagram.com/sayidamanllh_31?utm_source=qr&igsh=MXZscWE4NTFsenMybQ==',
     Icon:  InstagramIcon,
   },
 ]
