@@ -6,7 +6,7 @@ export default function Footer() {
           &copy; {new Date().getFullYear()} Muhamad Sayid Amanulloh
         </span>
         <span className="text-xs text-dim font-mono">
-          Node.js · React · Arduino
+          Node.js · React · AI
         </span>
       </div>
     </footer>

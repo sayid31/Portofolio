@@ -47,10 +47,10 @@ function AnimatedCounter({ to, suffix = '', delay = 0 }) {
 // ── Stats data — numeric entries use AnimatedCounter ──────────────────────────
 
 const STATS = [
-  { num: 3,    suffix: '+',  label: 'Sistem Dirilis'       },
-  { num: 2,    suffix: '',   label: 'Fokus Bidang'         },
-  { text: 'F→F',             label: 'Firmware ke Frontend' },
-  { num: 100,  suffix: '%',  label: 'Desain Auth-First'    },
+  { num: 3,    suffix: '+',  label: 'Systems Shipped'          },
+  { num: 2,    suffix: '',   label: 'Focus Areas'              },
+  { text: 'E2E',             label: 'Full-Stack Delivery'      },
+  { num: 100,  suffix: '%',  label: 'Auth-First Design'        },
 ]
 
 function ArrowRight() {
@@ -124,20 +124,20 @@ export default function Hero() {
         <motion.div className="mb-8" {...up(0)}>
           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-fence bg-surface text-xs text-muted font-mono tracking-wide">
             <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
-            Web Developer &amp; IoT Engineer
+            Full-Stack Developer &amp; AI Enthusiast
           </span>
         </motion.div>
 
         {/* Headline */}
         <motion.h1
-          className="font-semibold tracking-tighter text-ink leading-[1.07] mb-6 max-w-[18ch] text-balance"
-          style={{ fontSize: 'clamp(2.6rem, 5.5vw, 4.75rem)' }}
+          className="font-semibold tracking-tighter text-ink leading-[1.07] mb-6 text-balance"
+          style={{ fontSize: 'clamp(2rem, 5.5vw, 4.75rem)' }}
           {...up(0.1)}
         >
-          Membangun Aplikasi Web
+          Building Full-Stack Apps
           <br />
-          End-to-End &amp;{' '}
-          <span className="text-muted">Solusi IoT Terintegrasi.</span>
+          &amp;{' '}
+          <span className="text-muted">AI-Powered Features.</span>
         </motion.h1>
 
         {/* Sub-headline */}
@@ -145,9 +145,9 @@ export default function Hero() {
           className="text-base md:text-[1.0625rem] text-muted leading-relaxed mb-10 max-w-[44ch]"
           {...up(0.2)}
         >
-          Saya merancang solusi digital secara komprehensif—mulai dari membangun
-          dashboard pemantauan yang intuitif, merancang arsitektur API Node.js yang
-          aman, hingga menjembatani platform web dengan ekosistem hardware (IoT).
+          I build web applications from the ground up — clean APIs,
+          solid database design, and interfaces that don't get in the way.
+          Currently exploring how AI can make apps smarter, not just fancier.
         </motion.p>
 
         {/* CTA buttons */}
@@ -156,13 +156,13 @@ export default function Hero() {
             href="#work"
             className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md bg-ink text-canvas text-sm font-medium hover:bg-white transition-colors"
           >
-            Lihat Proyek
+            View Projects
           </a>
           <a
             href="https://drive.google.com/file/d/19cWORvbj6cNXSzwqY2yznfVubL8bOt0Q/view?usp=sharing"
             className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-md border border-fence-active text-muted text-sm font-medium hover:text-ink hover:border-faint transition-colors"
           >
-            Dokumentasi Sistem
+            System Documentation
             <ArrowRight />
           </a>
         </motion.div>

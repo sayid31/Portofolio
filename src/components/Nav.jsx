@@ -11,10 +11,10 @@ export default function Nav() {
   }, [])
 
   const links = [
-    { label: 'Proyek',    href: '#work'    },
-    { label: 'Keahlian',  href: '#stack'   },
-    { label: 'Profil',    href: '#profile' },
-    { label: 'Kontak',    href: '#contact' },
+    { label: 'Projects',  href: '#work'    },
+    { label: 'Skills',    href: '#stack'   },
+    { label: 'Profile',   href: '#profile' },
+    { label: 'Contact',   href: '#contact' },
   ]
 
   return (
@@ -33,7 +33,7 @@ export default function Nav() {
           </span>
           <span className="text-faint font-light select-none shrink-0">/</span>
           <span className="text-xs text-dim font-mono truncate hidden sm:block">
-            systems-engineer
+            full-stack-developer
           </span>
         </div>
 
@@ -58,7 +58,7 @@ export default function Nav() {
               className="w-1.5 h-1.5 rounded-full bg-accent shrink-0"
               style={{ boxShadow: '0 0 0 2.5px rgba(16,185,129,0.18)' }}
             />
-            <span className="text-xs text-accent font-medium">Terbuka untuk Peluang</span>
+            <span className="text-xs text-accent font-medium">Open to Opportunities</span>
           </div>
 
           {/* Hamburger — mobile only */}
@@ -90,7 +90,7 @@ export default function Nav() {
             ))}
             <div className="flex items-center gap-2 pt-3">
               <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
-              <span className="text-xs text-accent font-medium">Terbuka untuk peluang baru</span>
+              <span className="text-xs text-accent font-medium">Open to new opportunities</span>
             </div>
           </div>
         </div>

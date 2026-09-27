@@ -1,0 +1,103 @@
+// Case-study projects rendered by hand in src/components/CaseStudies.jsx.
+// Seeded into MongoDB (seed-case-studies.mjs) so they can be edited/deleted
+// from the admin dashboard. The `slug` maps each document to its custom card
+// component on the homepage.
+//
+// description: '' on purpose — an empty description makes the homepage card
+// fall back to its rich inline-formatted default text. Fill it in the admin
+// panel to override with your own plain text.
+export const CASE_STUDIES = [
+  {
+    slug: 'restock',
+    title: 'Restock & Stock Movement System',
+    subtitle: 'Precision audit trail with automated stock alerts',
+    description: '',
+    category: 'Supply Chain',
+    tags: ['Node.js', 'MySQL', 'node-cron', 'Nodemailer', 'Express'],
+    image: '/images/restock-engine.webp',
+    github: 'https://github.com/sayid31/Restock_Engine',
+    live: '',
+    featured: true,
+    order: 1,
+  },
+  {
+    slug: 'sauber',
+    title: 'Sauber Organic Composter',
+    subtitle: 'IoT automated composting system powered by Fuzzy Logic',
+    description: '',
+    category: 'IoT & Embedded',
+    tags: ['ESP32', 'Fuzzy Sugeno', 'C++', 'React', 'Node.js', 'RTC DS3231'],
+    image: '/images/sauber.webp',
+    github: 'https://github.com/sayid31/sauber-composter',
+    live: '',
+    featured: true,
+    order: 2,
+  },
+  {
+    slug: 'financial',
+    title: 'SaaS Break-Even Point Calculator',
+    subtitle: 'AI-powered financial forecasting API',
+    description: '',
+    category: 'Financial SaaS',
+    tags: ['TypeScript', 'Express', 'PostgreSQL', 'Prisma', 'REST'],
+    image: '/images/financial-bep.webp',
+    github: 'https://github.com/sayid31/System_Financial',
+    live: '',
+    featured: true,
+    order: 3,
+  },
+  {
+    slug: 'burger-pos',
+    title: 'Burger POS System',
+    subtitle: 'Frontend point-of-sale & admin dashboard',
+    description: '',
+    category: 'Frontend',
+    tags: ['HTML', 'CSS', 'Vanilla JS', 'Chart.js', 'Swiper.js'],
+    image: '/images/burger-post.webp',
+    github: 'https://github.com/sayid31/burger-pos-system',
+    live: '',
+    featured: false,
+    order: 4,
+  },
+  {
+    slug: 'inventory',
+    title: 'Inventory Management System',
+    subtitle: 'Warehouse stock tracking & control',
+    description: '',
+    category: 'Full-Stack',
+    tags: ['Node.js', 'Express', 'MySQL', 'React', 'JWT'],
+    image: '/images/inventory.webp',
+    github: 'https://github.com/sayid31/inventory-supply-chain-',
+    live: '',
+    featured: false,
+    order: 5,
+  },
+  {
+    slug: 'gaming-shield',
+    title: 'Gaming Liquid Shield',
+    subtitle: 'Thermal engineering & mechanical design',
+    description: '',
+    category: 'Hardware Innovation',
+    tags: ['Thermal Engineering', 'Hardware Design', 'Mechanical CAD'],
+    image: '',
+    github: '',
+    live: '',
+    featured: false,
+    order: 6,
+  },
+  {
+    // Exists in MongoDB already (seed script only attaches the slug) — kept
+    // here as the frontend fallback while the API is loading or down.
+    slug: 'ai-feedback',
+    title: 'AI Customer Feedback Analyzer',
+    subtitle: 'Sentiment analysis dashboard powered by OpenAI & Claude',
+    description: '',
+    category: 'AI & ML',
+    tags: ['React 19', 'Express 5', 'OpenAI', 'Claude API', 'Tailwind 4', 'Recharts', 'Framer Motion'],
+    image: '',
+    github: 'https://github.com/sayid31/AI_Customer_Feedback_Analyzer',
+    live: '',
+    featured: true,
+    order: 0,
+  },
+]

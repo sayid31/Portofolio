@@ -2,4 +2,13 @@ node_modules/
 dist/
 .env
 .env.local
+.env.production
+atlas-credentials.env
 .DS_Store
+.vercel
+.env*
+
+# local artifacts
+.playwright-mcp/
+homepage-check.png
+test-api.js

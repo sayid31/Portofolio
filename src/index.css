@@ -41,3 +41,11 @@
     text-wrap: balance;
   }
 }
+
+/* Responsive heatmap scroll hint on mobile */
+@media (max-width: 640px) {
+  .heatmap-scroll {
+    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  }
+}

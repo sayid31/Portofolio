@@ -1,208 +1,303 @@
-import { useRef, useState, useEffect } from 'react'
+import { lazy, Suspense, useRef, useState, useEffect, Component } from 'react'
 import { motion, useInView } from 'framer-motion'
 
-// ── Terminal ──────────────────────────────────────────────────────────────────
+const TerminalScene = lazy(() => import('./TerminalScene'))
 
-const SCRIPT = [
-  { cmd: true,  text: 'whoami'                                         },
-  { cmd: false, text: 'Muhamad Sayid · Full-Stack & IoT Engineer'      },
-  { cmd: true,  text: 'cat ketersediaan.txt'                           },
-  { cmd: false, text: 'Terbuka untuk peluang baru · membalas dalam 24 jam' },
-  { cmd: true,  text: 'git log --oneline -3'                           },
-  { cmd: false, text: 'cd0d567  feat: Three.js + Framer Motion'        },
-  { cmd: false, text: '9bda695  fix: responsive layout polish'          },
-  { cmd: false, text: 'bbd35a0  trigger: force deploy'                 },
-]
+class TerminalSceneErrorBoundary extends Component {
+  state = { failed: false }
+  static getDerivedStateFromError() { return { failed: true } }
+  render() {
+    if (this.state.failed) return null
+    return this.props.children
+  }
+}
 
-// Cumulative reveal delays — cmd lines get a longer pause to simulate typing
-const REVEAL_DELAYS = [400, 850, 1350, 1800, 2300, 2650, 2900, 3150]
+// ── Motion helper (same style as Hero) ───────────────────────────────────────
+const fadeUp = (delay = 0) => ({
+  initial:    { opacity: 0, y: 18 },
+  animate:    { opacity: 1, y: 0  },
+  transition: { duration: 0.5, delay, ease: [0.25, 0.46, 0.45, 0.94] },
+})
 
 function Terminal() {
-  const [step, setStep] = useState(-1)
-  const ref    = useRef(null)
-  const inView = useInView(ref, { once: true, amount: 0.4 })
-  const timers = useRef([])
-
-  useEffect(() => {
-    if (!inView) return
-    timers.current = REVEAL_DELAYS.map((d, i) =>
-      setTimeout(() => setStep(i), d)
-    )
-    return () => timers.current.forEach(clearTimeout)
-  }, [inView])
-
   return (
-    <div ref={ref} className="rounded-xl border border-fence overflow-hidden bg-[#050505]">
-      {/* Window chrome */}
-      <div className="flex items-center gap-1.5 px-4 py-2.5 border-b border-fence bg-[#0d0d0d]">
-        <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
-        <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
-        <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
-        <span className="ml-auto text-[10px] text-dim font-mono">
-          sayid@portfolio — zsh
-        </span>
-      </div>
-
-      {/* Body */}
-      <div className="px-4 pt-3 pb-4 font-mono text-xs space-y-1.5 min-h-[192px]">
-        {SCRIPT.slice(0, step + 1).map((line, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, x: -6 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.25 }}
-            className="flex items-start gap-2"
-          >
-            {line.cmd
-              ? <span className="text-accent select-none shrink-0 mt-px">❯</span>
-              : <span className="text-dim select-none shrink-0 mt-px ml-4">→</span>
-            }
-            <span className={line.cmd ? 'text-ink' : 'text-dim leading-relaxed'}>
-              {line.text}
-            </span>
-          </motion.div>
-        ))}
-
-        {/* Blinking cursor — always visible after mount */}
-        <div className="flex items-center gap-2 mt-1">
-          <span className="text-accent select-none">❯</span>
-          <span
-            className="inline-block w-1.5 h-3.5 bg-accent rounded-[1px]"
-            style={{ animation: 'blink 1.1s step-end infinite' }}
-          />
-        </div>
-      </div>
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <TerminalSceneErrorBoundary>
+        <Suspense fallback={null}>
+          <TerminalScene />
+        </Suspense>
+      </TerminalSceneErrorBoundary>
     </div>
   )
 }
 
-// ── Activity Heatmap ──────────────────────────────────────────────────────────
+// ── Activity Heatmap — Real GitHub Data ───────────────────────────────────────
 
-// Deterministic "activity" data via Park-Miller LCG (seed = 31337)
-const WEEKS = 26
-const HEATMAP_DATA = (() => {
-  let s = 31337
-  const r = () => { s = (s * 16807) % 2147483647; return s / 2147483647 }
-
-  return Array.from({ length: WEEKS * 7 }, (_, idx) => {
-    const day     = idx % 7                  // 0=Mon … 6=Sun
-    const week    = Math.floor(idx / 7)
-    const sprint  = [1, 4, 8, 12, 16, 20, 24].includes(week)
-    const weekend = day >= 5
-
-    if (weekend && r() > 0.3) return 0
-    if (weekend) return r() > 0.55 ? 1 : 0
-    if (sprint) {
-      const v = r()
-      return v < 0.05 ? 0 : v < 0.2 ? 2 : v < 0.55 ? 3 : 4
-    }
-    const v = r()
-    return v < 0.22 ? 0 : v < 0.48 ? 1 : v < 0.74 ? 2 : v < 0.92 ? 3 : 4
-  })
-})()
-
-// Compute month labels from today going back WEEKS weeks
-function getMonthLabels() {
-  const today = new Date()
-  const labels = []
-  let lastMonth = -1
-
-  for (let w = 0; w < WEEKS; w++) {
-    const d = new Date(today)
-    d.setDate(d.getDate() - (WEEKS - 1 - w) * 7)
-    const m = d.getMonth()
-    if (m !== lastMonth) {
-      labels.push({ week: w, label: d.toLocaleString('en-GB', { month: 'short' }) })
-      lastMonth = m
-    }
-  }
-  return labels
-}
-
-const MONTH_LABELS = getMonthLabels()
+const GITHUB_USERNAME = 'sayid31'
+const CACHE_KEY = `github_heatmap_${GITHUB_USERNAME}`
+const CACHE_TTL = 24 * 60 * 60 * 1000 // 24 hours
+const WEEKS = 52
+const CELL_SIZE = 12
+const CELL_GAP  = 3
 
 const CELL_COLORS = [
-  'bg-fence',         // 0 — empty
+  'bg-fence',         // 0 — no activity
   'bg-accent/20',     // 1 — light
   'bg-accent/45',     // 2 — medium
   'bg-accent/70',     // 3 — high
   'bg-accent',        // 4 — max
 ]
 
+// Map a commit count to a 0–4 level
+function countToLevel(count) {
+  if (count === 0) return 0
+  if (count <= 2)  return 1
+  if (count <= 5)  return 2
+  if (count <= 10) return 3
+  return 4
+}
+
+// Fetch commit activity from GitHub with localStorage cache
+async function fetchGitHubActivity(username) {
+  // 1. Check cache first
+  try {
+    const cached = localStorage.getItem(CACHE_KEY)
+    if (cached) {
+      const { data, timestamp } = JSON.parse(cached)
+      if (Date.now() - timestamp < CACHE_TTL && Array.isArray(data)) {
+        console.log('[heatmap] Using cached data')
+        return data
+      }
+    }
+  } catch {}
+
+  // 2. Fetch fresh data from GitHub
+  const start = new Date()
+  start.setDate(start.getDate() - WEEKS * 7)
+
+  try {
+    const reposRes = await fetch(
+      `https://api.github.com/users/${username}/repos?per_page=6&type=owner&sort=pushed&direction=desc`
+    )
+    if (!reposRes.ok) throw new Error(`repos fetch failed: ${reposRes.status}`)
+    const repos = await reposRes.json()
+    if (!Array.isArray(repos)) throw new Error('unexpected response')
+
+    const commitPromises = repos.map(async (repo) => {
+      try {
+        const since = start.toISOString()
+        const res = await fetch(
+          `https://api.github.com/repos/${username}/${repo.name}/commits?since=${since}&per_page=100`
+        )
+        if (!res.ok) return []
+        const data = await res.json()
+        return Array.isArray(data) ? data : []
+      } catch {
+        return []
+      }
+    })
+
+    const allCommits = (await Promise.all(commitPromises)).flat()
+
+    // Build date → count map
+    const dateMap = {}
+    allCommits.forEach((c) => {
+      const dateStr = c.commit.author.date.split('T')[0]
+      dateMap[dateStr] = (dateMap[dateStr] || 0) + 1
+    })
+
+    // Build heatmap array
+    const data = []
+    const today = new Date()
+    const totalDays = WEEKS * 7
+    const startDate = new Date(today)
+    startDate.setDate(startDate.getDate() - totalDays + 1)
+    const dayOfWeek = startDate.getDay()
+    const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek
+    startDate.setDate(startDate.getDate() + mondayOffset)
+
+    for (let i = 0; i < totalDays; i++) {
+      const d = new Date(startDate)
+      d.setDate(d.getDate() + i)
+      const dateStr = d.toISOString().split('T')[0]
+      data.push(countToLevel(dateMap[dateStr] || 0))
+    }
+
+    // 3. Save to cache
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify({ data, timestamp: Date.now() }))
+    } catch {}
+
+    return data
+  } catch (err) {
+    console.error('[heatmap] GitHub fetch failed:', err)
+    return null
+  }
+}
+
+// Compute month labels from today going back WEEKS weeks
+function getMonthLabels(startDate) {
+  const labels = []
+  let lastMonth = -1
+
+  for (let w = 0; w < WEEKS; w++) {
+    const d = new Date(startDate)
+    d.setDate(d.getDate() + w * 7)
+    const m = d.getMonth()
+    const y = d.getFullYear()
+    if (m !== lastMonth) {
+      labels.push({
+        week: w,
+        month: d.toLocaleString('en-GB', { month: 'short' }),
+        year: y,
+      })
+      lastMonth = m
+    }
+  }
+  return labels
+}
+
+// Get unique years for year labels
+function getYearLabels(startDate) {
+  const years = new Set()
+  for (let w = 0; w < WEEKS; w++) {
+    const d = new Date(startDate)
+    d.setDate(d.getDate() + w * 7)
+    years.add(d.getFullYear())
+  }
+  return Array.from(years)
+}
+
 function ActivityHeatmap() {
   const ref    = useRef(null)
   const inView = useInView(ref, { once: true, amount: 0.3 })
+  const [heatmapData, setHeatmapData] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let cancelled = false
+    fetchGitHubActivity(GITHUB_USERNAME).then((data) => {
+      if (!cancelled) {
+        setHeatmapData(data)
+        setLoading(false)
+      }
+    })
+    return () => { cancelled = true }
+  }, [])
+
+  // Compute start date for month labels
+  const startDate = new Date()
+  startDate.setDate(startDate.getDate() - WEEKS * 7 + 1)
+  const dayOfWeek = startDate.getDay()
+  const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek
+  startDate.setDate(startDate.getDate() + mondayOffset)
+  const monthLabels = getMonthLabels(startDate)
+
+  // Use real data or show loading/empty state
+  const data = heatmapData || Array(WEEKS * 7).fill(0)
+
+  // Total grid width
+  const gridWidth = WEEKS * (CELL_SIZE + CELL_GAP)
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className="w-full">
       <p className="text-[11px] text-dim font-mono uppercase tracking-widest mb-3">
-        Aktivitas Pengembangan
+        Development Activity
       </p>
 
-      {/* Month labels */}
-      <div className="relative mb-1" style={{ paddingLeft: 20 }}>
-        <div className="flex" style={{ gap: 2 }}>
-          {Array.from({ length: WEEKS }, (_, w) => {
-            const monthEntry = MONTH_LABELS.find(m => m.week === w)
-            return (
-              <div key={w} style={{ width: 11, flexShrink: 0 }}>
-                {monthEntry && (
-                  <span className="text-[9px] text-faint font-mono absolute" style={{ whiteSpace: 'nowrap' }}>
-                    {monthEntry.label}
-                  </span>
-                )}
-              </div>
-            )
-          })}
+      {loading && (
+        <div className="flex items-center gap-2 text-[10px] text-faint font-mono mb-3">
+          <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+          Loading contribution data…
         </div>
-      </div>
+      )}
 
-      {/* Grid — columns = weeks, rows = days (Mon→Sun) */}
-      <div className="flex items-start gap-1">
-        {/* Day labels */}
-        <div className="flex flex-col gap-[2px] mr-1" style={{ paddingTop: 14 }}>
-          {['M', '', 'W', '', 'F', '', 'S'].map((d, i) => (
-            <div key={i} style={{ height: 11, fontSize: 8 }}
-                 className="text-faint font-mono leading-none flex items-center">
-              {d}
-            </div>
-          ))}
+      {!loading && heatmapData && heatmapData.every(v => v === 0) && (
+        <div className="flex items-center gap-2 text-[10px] text-faint font-mono mb-3">
+          <span className="w-1.5 h-1.5 rounded-full bg-dim" />
+          No recent commits found — check console for debug info
         </div>
+      )}
 
-        {/* Cells */}
-        <div className="flex gap-[2px]" style={{ paddingTop: 14 }}>
-          {Array.from({ length: WEEKS }, (_, w) => (
-            <div key={w} className="flex flex-col gap-[2px]">
-              {Array.from({ length: 7 }, (_, d) => {
-                const level = HEATMAP_DATA[w * 7 + d]
+      {/* Scrollable container */}
+      <div className="overflow-x-auto pb-2">
+        <div style={{ minWidth: gridWidth + 30 }}>
+
+          {/* Year labels — top row */}
+          <div className="flex mb-1" style={{ paddingLeft: 20 }}>
+            {getYearLabels(startDate).map((year) => (
+              <span key={year} className="text-[9px] text-faint font-mono mr-4">
+                {year}
+              </span>
+            ))}
+          </div>
+
+          {/* Month labels */}
+          <div className="relative mb-1" style={{ paddingLeft: 20 }}>
+            <div className="flex" style={{ gap: CELL_GAP }}>
+              {Array.from({ length: WEEKS }, (_, w) => {
+                const entry = monthLabels.find(m => m.week === w)
                 return (
-                  <motion.div
-                    key={d}
-                    title={`Activity level ${level}`}
-                    className={`rounded-[2px] ${CELL_COLORS[level]}`}
-                    style={{ width: 11, height: 11 }}
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={inView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{
-                      duration: 0.25,
-                      delay: inView ? (w * 7 + d) * 0.003 : 0,
-                      ease: 'easeOut',
-                    }}
-                  />
+                  <div key={w} style={{ width: CELL_SIZE, flexShrink: 0 }}>
+                    {entry && (
+                      <span className="text-[9px] text-faint font-mono absolute" style={{ whiteSpace: 'nowrap' }}>
+                        {entry.month}
+                      </span>
+                    )}
+                  </div>
                 )
               })}
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
 
-      {/* Legend */}
-      <div className="flex items-center gap-1.5 mt-3 justify-end">
-        <span className="text-[9px] text-faint font-mono">Sedikit</span>
-        {CELL_COLORS.map((c, i) => (
-          <div key={i} className={`w-2.5 h-2.5 rounded-[2px] ${c}`} />
-        ))}
-        <span className="text-[9px] text-faint font-mono">Banyak</span>
+          {/* Grid — columns = weeks, rows = days (Mon→Sun) */}
+          <div className="flex items-start gap-1">
+            {/* Day labels */}
+            <div className="flex flex-col gap-[3px] mr-1" style={{ paddingTop: 14 }}>
+              {['M', '', 'W', '', 'F', '', 'S'].map((d, i) => (
+                <div key={i} style={{ height: CELL_SIZE, fontSize: 8 }}
+                     className="text-faint font-mono leading-none flex items-center">
+                  {d}
+                </div>
+              ))}
+            </div>
+
+            {/* Cells */}
+            <div className="flex gap-[3px]" style={{ paddingTop: 14 }}>
+              {Array.from({ length: WEEKS }, (_, w) => (
+                <div key={w} className="flex flex-col gap-[3px]">
+                  {Array.from({ length: 7 }, (_, d) => {
+                    const level = data[w * 7 + d]
+                    return (
+                      <motion.div
+                        key={d}
+                        title={`Activity level ${level}`}
+                        className={`rounded-[2px] ${CELL_COLORS[level]}`}
+                        style={{ width: CELL_SIZE, height: CELL_SIZE }}
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={inView ? { opacity: 1, scale: 1 } : {}}
+                        transition={{
+                          duration: 0.25,
+                          delay: inView ? (w * 7 + d) * 0.002 : 0,
+                          ease: 'easeOut',
+                        }}
+                      />
+                    )
+                  })}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Legend */}
+          <div className="flex items-center gap-1.5 mt-3 justify-end">
+            <span className="text-[9px] text-faint font-mono">Less</span>
+            {CELL_COLORS.map((c, i) => (
+              <div key={i} className={`w-2.5 h-2.5 rounded-[2px] ${c}`} />
+            ))}
+            <span className="text-[9px] text-faint font-mono">More</span>
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -211,9 +306,9 @@ function ActivityHeatmap() {
 // ── Contact links ─────────────────────────────────────────────────────────────
 
 const LINKS = [
-  { label: 'GitHub',   href: 'https://github.com/sayid31',                       desc: 'Kode sumber & kontribusi'  },
-  { label: 'LinkedIn', href: 'https://linkedin.com/in/muhamad-sayid-amannulloh', desc: 'Riwayat profesional'        },
-  { label: 'Email',    href: 'mailto:muhamadsayidamanulloh@email.com',            desc: 'Jalur komunikasi utama'     },
+  { label: 'GitHub',   href: 'https://github.com/sayid31',                       desc: 'Source code & contributions'  },
+  { label: 'LinkedIn', href: 'https://linkedin.com/in/muhamad-sayid-amannulloh', desc: 'Professional history'        },
+  { label: 'Email',    href: 'mailto:muhamadsayidamanulloh@email.com',            desc: 'Primary communication'       },
 ]
 
 function ExternalIcon() {
@@ -235,10 +330,13 @@ const blinkStyle = (
 
 export default function Contact() {
   return (
-    <section id="contact" className="max-w-6xl mx-auto px-6 py-24 border-t border-fence">
+    <section id="contact" className="relative max-w-6xl mx-auto px-6 py-24 border-t border-fence">
       {blinkStyle}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+      {/* 3D particles — full section background */}
+      <Terminal />
+
+      <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start">
 
         {/* ── Left column: CTA + Terminal ───────────────────────────────── */}
         <motion.div
@@ -250,16 +348,16 @@ export default function Contact() {
         >
           <div>
             <p className="text-xs text-dim font-mono uppercase tracking-widest mb-2">
-              05 / Kontak
+              05 / Contact
             </p>
             <h2 className="text-2xl md:text-3xl font-semibold text-ink tracking-tight mb-4">
-              Mari bangun sistem
+              Let's build something
               <br />
-              <span className="text-muted">yang siap digunakan.</span>
+              <span className="text-muted">that actually ships.</span>
             </h2>
             <p className="text-sm text-muted leading-relaxed max-w-[40ch]">
-              Saya terbuka untuk posisi Backend Engineer, Full-Stack, maupun proyek IoT.
-              Silakan sampaikan kebutuhan Anda, saya akan membalas dalam waktu 24 jam.
+              I'm open to Backend, Full-Stack, or AI-focused roles.
+              Drop me a message — I usually reply within a day.
             </p>
 
             <div className="mt-6 flex items-center gap-2 px-4 py-3 rounded-lg border border-fence bg-card w-fit">
@@ -268,13 +366,10 @@ export default function Contact() {
                 style={{ boxShadow: '0 0 0 2.5px rgba(16,185,129,0.18)' }}
               />
               <span className="text-xs text-accent font-medium">
-                Terbuka untuk peluang baru
+                Open to new opportunities
               </span>
             </div>
           </div>
-
-          {/* Terminal */}
-          <Terminal />
         </motion.div>
 
         {/* ── Right column: Links + Heatmap ─────────────────────────────── */}
@@ -311,7 +406,7 @@ export default function Contact() {
           </div>
 
           {/* Activity heatmap */}
-          <div className="p-4 rounded-xl border border-fence bg-card overflow-x-auto">
+          <div className="overflow-x-auto">
             <ActivityHeatmap />
           </div>
         </motion.div>

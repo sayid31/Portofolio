@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio CMS — Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #050507;
+      color: #e4e4e7;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    ::selection { background: rgba(99,102,241,0.3); }
+
+    /* ── Scrollbar ─────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+
+    /* ── Login Page ────────────────────────────────── */
+    .login-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #050507;
+      position: relative;
+      overflow: hidden;
+    }
+    .login-page::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      left: -20%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .login-page::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      right: -15%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .login-card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 400px;
+      padding: 40px 36px;
+      background: rgba(9,9,11,0.8);
+      border: 1px solid rgba(39,39,42,0.6);
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 0 80px rgba(99,102,241,0.04), 0 25px 50px rgba(0,0,0,0.5);
+    }
+    .login-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin: 0 auto 24px;
+      box-shadow: 0 0 30px rgba(99,102,241,0.2);
+    }
+    .login-card h2 {
+      font-size: 20px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 4px;
+      letter-spacing: -0.03em;
+      color: #fafafa;
+    }
+    .login-card .subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: #71717a;
+      margin-bottom: 32px;
+    }
+    .login-card .field { margin-bottom: 18px; }
+    .login-card .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #a1a1aa;
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+    }
+    .login-card .field input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(39,39,42,0.8);
+      background: rgba(24,24,27,0.6);
+      color: #fafafa;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .login-card .field input::placeholder { color: #52525b; }
+    .login-card .field input:focus {
+      border-color: rgba(99,102,241,0.5);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+    }
+    .login-error {
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.2);
+      color: #f87171;
+      font-size: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+    .login-btn:hover {
+      box-shadow: 0 0 25px rgba(99,102,241,0.3);
+      transform: translateY(-1px);
+    }
+    .login-btn:active { transform: translateY(0); }
+    .login-footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 11px;
+      color: #3f3f46;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── Dashboard ─────────────────────────────────── */
+    .app { max-width: 1000px; margin: 0 auto; padding: 28px 24px; }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(39,39,42,0.5);
+    }
+    header .brand { display: flex; align-items: center; gap: 12px; }
+    header .brand-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    header h1 { font-size: 17px; font-weight: 600; letter-spacing: -0.03em; color: #fafafa; }
+    header .actions { display: flex; align-items: center; gap: 10px; }
+    .badge {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #34d399;
+      background: rgba(16,185,129,0.06);
+      border: 1px solid rgba(16,185,129,0.15);
+      padding: 4px 12px;
+      border-radius: 99px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #34d399;
+      box-shadow: 0 0 6px #34d399;
+    }
+
+    /* ── Buttons ───────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(39,39,42,0.6);
+      background: rgba(24,24,27,0.5);
+      color: #a1a1aa;
+      font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-decoration: none;
+    }
+    .btn:hover { color: #fafafa; border-color: #52525b; background: rgba(39,39,42,0.3); }
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1 0%, #7c3aed 100%);
+      color: #fff;
+      border: none;
+      box-shadow: 0 0 20px rgba(99,102,241,0.15);
+    }
+    .btn-primary:hover {
+      box-shadow: 0 0 30px rgba(99,102,241,0.3);
+      transform: translateY(-1px);
+    }
+    .btn-danger { color: #f87171; border-color: rgba(239,68,68,0.2); }
+    .btn-danger:hover { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.4); }
+    .btn-sm { padding: 5px 12px; font-size: 12px; }
+    .btn-ghost { border: none; background: transparent; color: #71717a; }
+    .btn-ghost:hover { color: #a1a1aa; background: rgba(39,39,42,0.2); }
+
+    /* ── Toolbar ───────────────────────────────────── */
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .toolbar .count {
+      font-size: 13px;
+      color: #71717a;
+    }
+    .toolbar .count strong { color: #a1a1aa; font-weight: 600; }
+
+    /* ── Cards ─────────────────────────────────────── */
+    .card {
+      border: 1px solid rgba(39,39,42,0.4);
+      border-radius: 14px;
+      background: rgba(9,9,11,0.6);
+      padding: 20px;
+      margin-bottom: 10px;
+      transition: all 0.2s;
+    }
+    .card:hover {
+      border-color: rgba(63,63,70,0.6);
+      background: rgba(9,9,11,0.8);
+    }
+    .card-header {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fafafa;
+      letter-spacing: -0.02em;
+    }
+    .card-subtitle {
+      font-size: 12px;
+      color: #71717a;
+      margin-top: 3px;
+      line-height: 1.5;
+    }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .tag {
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 3px 10px;
+      border-radius: 6px;
+      background: rgba(24,24,27,0.8);
+      color: #71717a;
+      border: 1px solid rgba(39,39,42,0.5);
+      letter-spacing: 0.01em;
+    }
+    .tag.accent { color: #34d399; background: rgba(16,185,129,0.06); border-color: rgba(16,185,129,0.15); }
+    .tag.indigo { color: #818cf8; background: rgba(99,102,241,0.06); border-color: rgba(99,102,241,0.15); }
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(39,39,42,0.3);
+    }
+
+    /* ── Modal ─────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      animation: fadeIn 0.15s ease;
+    }
+    .modal {
+      background: rgba(9,9,11,0.95);
+      border: 1px solid rgba(39,39,42,0.5);
+      border-radius: 18px;
+      padding: 32px;
+      width: 92%;
+      max-width: 580px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+      animation: slideUp 0.2s ease;
+    }
+    .modal h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: #fafafa;
+      letter-spacing: -0.02em;
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(39,39,42,0.3);
+    }
+
+    /* ── Forms ─────────────────────────────────────── */
+    .field { margin-bottom: 18px; }
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #a1a1aa;
+      margin-bottom: 7px;
+      letter-spacing: 0.02em;
+    }
+    .field input, .field textarea, .field select {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(39,39,42,0.6);
+      background: rgba(24,24,27,0.5);
+      color: #fafafa;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .field input::placeholder, .field textarea::placeholder { color: #52525b; }
+    .field input:focus, .field textarea:focus, .field select:focus {
+      border-color: rgba(99,102,241,0.4);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.08);
+    }
+    .field textarea { min-height: 100px; resize: vertical; }
+    .field select {
+      appearance: none;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%2371717a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+    .field .hint {
+      font-size: 11px;
+      color: #52525b;
+      margin-top: 5px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── Toast ─────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      z-index: 200;
+      animation: slideIn 0.3s ease;
+      backdrop-filter: blur(12px);
+    }
+    .toast-success {
+      background: rgba(16,185,129,0.1);
+      color: #34d399;
+      border: 1px solid rgba(16,185,129,0.2);
+    }
+    .toast-error {
+      background: rgba(239,68,68,0.1);
+      color: #f87171;
+      border: 1px solid rgba(239,68,68,0.2);
+    }
+
+    /* ── Empty state ───────────────────────────────── */
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: #52525b;
+      font-size: 14px;
+    }
+    .empty .icon { font-size: 36px; margin-bottom: 16px; opacity: 0.5; }
+    .empty p { margin-top: 4px; }
+
+    /* ── Stats Row ─────────────────────────────────── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      padding: 16px 18px;
+      border-radius: 12px;
+      background: rgba(9,9,11,0.6);
+      border: 1px solid rgba(39,39,42,0.4);
+    }
+    .stat-card .stat-label {
+      font-size: 11px;
+      color: #52525b;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 6px;
+    }
+    .stat-card .stat-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fafafa;
+      letter-spacing: -0.03em;
+    }
+    .stat-card .stat-value.accent { color: #818cf8; }
+
+    /* ── Animations ────────────────────────────────── */
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes slideIn { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    /* ── Responsive ────────────────────────────────── */
+    @media (max-width: 640px) {
+      .login-card { margin: 16px; padding: 28px 24px; }
+      .stats { grid-template-columns: 1fr; }
+      header { flex-direction: column; gap: 12px; align-items: flex-start; }
+      .toolbar { flex-direction: column; gap: 12px; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app"></div>
+
+  <script>
+    const API_BASE = window.location.origin + '/api'
+    let token = localStorage.getItem('cms_token')
+    let projects = []
+
+    // ── API Helper ───────────────────────────────────────────────────────
+    async function api(path, opts = {}) {
+      const headers = { 'Content-Type': 'application/json' }
+      if (token) headers['Authorization'] = `Bearer ${token}`
+      const res = await fetch(`${API_BASE}${path}`, { ...opts, headers: { ...headers, ...opts.headers } })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Request failed')
+      return data
+    }
+
+    function toast(msg, type = 'success') {
+      const el = document.createElement('div')
+      el.className = `toast toast-${type}`
+      el.textContent = msg
+      document.body.appendChild(el)
+      setTimeout(() => el.remove(), 3000)
+    }
+
+    function esc(s) {
+      const d = document.createElement('div')
+      d.textContent = s
+      return d.innerHTML
+    }
+
+    // ── Render Router ────────────────────────────────────────────────────
+    function render() {
+      const app = document.getElementById('app')
+      if (!token) {
+        app.innerHTML = renderLogin()
+        bindLogin()
+      } else {
+        app.innerHTML = renderDashboard()
+        bindDashboard()
+      }
+    }
+
+    // ── Login Page ──────────────────────────────────────────────────────
+    function renderLogin() {
+      return `
+        <div class="login-page">
+          <div class="login-card">
+            <div class="login-logo">⚡</div>
+            <h2>Welcome back</h2>
+            <p class="subtitle">Sign in to your portfolio CMS</p>
+            <div id="login-error" class="login-error"></div>
+            <div class="field">
+              <label>Username</label>
+              <input type="text" id="login-user" placeholder="Enter username" autocomplete="username" />
+            </div>
+            <div class="field">
+              <label>Password</label>
+              <input type="password" id="login-pass" placeholder="Enter password" autocomplete="current-password" />
+            </div>
+            <button class="login-btn" id="login-btn">Sign In</button>
+            <div class="login-footer">Portfolio CMS v1.0</div>
+          </div>
+        </div>
+      `
+    }
+
+    // ── Dashboard ───────────────────────────────────────────────────────
+    function renderDashboard() {
+      const featured = projects.filter(p => p.featured).length
+      const categories = [...new Set(projects.map(p => p.category))]
+
+      const list = projects.length === 0
+        ? `<div class="empty"><div class="icon">📦</div><p>No projects yet</p><p style="margin-top:4px;font-size:12px">Create your first project to get started</p></div>`
+        : projects.map(p => `
+          <div class="card" data-id="${p._id}">
+            <div class="card-header">
+              <div>
+                <div class="card-title">${esc(p.title)}</div>
+                <div class="card-subtitle">${esc(p.subtitle || 'No subtitle')}</div>
+              </div>
+              <span class="tag ${p.featured && !p.slug ? 'accent' : 'indigo'}">${p.slug ? '🧩 Case Study' : p.featured ? '★ Featured' : esc(p.category)}</span>
+            </div>
+            ${p.description ? `<p style="font-size:12px;color:#52525b;line-height:1.5;margin-bottom:4px">${esc(p.description).substring(0, 120)}${p.description.length > 120 ? '…' : ''}</p>` : ''}
+            <div class="card-tags">
+              ${(p.tags || []).map(t => `<span class="tag">${esc(t)}</span>`).join('')}
+            </div>
+            <div class="card-actions">
+              <button class="btn btn-sm" data-edit="${p._id}">✏️ Edit</button>
+              <button class="btn btn-sm btn-danger" data-delete="${p._id}">🗑 Delete</button>
+              ${p.github ? `<a class="btn btn-sm" href="${esc(p.github)}" target="_blank" rel="noopener">↗ GitHub</a>` : ''}
+              ${p.live ? `<a class="btn btn-sm" href="${esc(p.live)}" target="_blank" rel="noopener">↗ Live</a>` : ''}
+            </div>
+          </div>
+        `).join('')
+
+      return `
+        <header>
+          <div class="brand">
+            <div class="brand-icon">⚡</div>
+            <h1>Portfolio CMS</h1>
+          </div>
+          <div class="actions">
+            <span class="badge">Connected</span>
+            <button class="btn btn-sm" id="change-pass-btn">🔑 Password</button>
+            <button class="btn btn-sm" id="logout-btn">Logout</button>
+          </div>
+        </header>
+
+        <div class="stats">
+          <div class="stat-card">
+            <div class="stat-label">Projects</div>
+            <div class="stat-value">${projects.length}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Featured</div>
+            <div class="stat-value accent">${featured}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Categories</div>
+            <div class="stat-value">${categories.length}</div>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <span class="count"><strong>${projects.length}</strong> project${projects.length !== 1 ? 's' : ''}</span>
+          <button class="btn btn-primary" id="add-btn">+ New Project</button>
+        </div>
+
+        <div id="project-list">${list}</div>
+        <div id="modal-root"></div>
+      `
+    }
+
+    // ── Project Form Modal ──────────────────────────────────────────────
+    function renderForm(p = {}) {
+      return `
+        <div class="modal-overlay" id="modal-overlay">
+          <div class="modal">
+            <h3>${p._id ? '✏️ Edit Project' : '✨ New Project'}</h3>
+            <div class="field">
+              <label>Title *</label>
+              <input type="text" id="f-title" value="${esc(p.title || '')}" placeholder="My awesome project" />
+            </div>
+            <div class="field">
+              <label>Subtitle</label>
+              <input type="text" id="f-subtitle" value="${esc(p.subtitle || '')}" placeholder="Short tagline" />
+            </div>
+            <div class="field">
+              <label>Description</label>
+              <textarea id="f-desc" placeholder="What does this project do?">${esc(p.description || '')}</textarea>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div class="field">
+                <label>Category</label>
+                <select id="f-category">
+                  ${['fullstack','frontend','backend','ai','iot','other'].map(c =>
+                    `<option value="${c}" ${p.category === c ? 'selected' : ''}>${c.charAt(0).toUpperCase() + c.slice(1)}</option>`
+                  ).join('')}
+                </select>
+              </div>
+              <div class="field">
+                <label>Order</label>
+                <input type="number" id="f-order" value="${p.order || 0}" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Tags</label>
+              <input type="text" id="f-tags" value="${(p.tags || []).join(', ')}" placeholder="React, Node.js, MongoDB" />
+              <div class="hint">Separate with commas</div>
+            </div>
+            <div class="field">
+              <label>Image URL</label>
+              <input type="text" id="f-image" value="${esc(p.image || '')}" placeholder="/images/project.webp" />
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div class="field">
+                <label>GitHub URL</label>
+                <input type="text" id="f-github" value="${esc(p.github || '')}" placeholder="https://github.com/..." />
+              </div>
+              <div class="field">
+                <label>Live URL</label>
+                <input type="text" id="f-live" value="${esc(p.live || '')}" placeholder="https://..." />
+              </div>
+            </div>
+            <div class="field" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;border:1px solid rgba(39,39,42,0.4);background:rgba(24,24,27,0.3)">
+              <input type="checkbox" id="f-featured" ${p.featured ? 'checked' : ''} style="width:auto;accent-color:#6366f1" />
+              <label for="f-featured" style="margin:0;color:#a1a1aa;font-size:13px">Featured project</label>
+            </div>
+            <div class="modal-actions">
+              <button class="btn" id="modal-cancel">Cancel</button>
+              <button class="btn btn-primary" id="modal-save">${p._id ? 'Save Changes' : 'Create Project'}</button>
+            </div>
+          </div>
+        </div>
+      `
+    }
+
+    // ── Password Change Modal ───────────────────────────────────────────
+    function renderPasswordForm() {
+      return `
+        <div class="modal-overlay" id="modal-overlay">
+          <div class="modal" style="max-width:400px">
+            <h3>🔑 Change Password</h3>
+            <div class="field">
+              <label>Current Password</label>
+              <input type="password" id="cp-current" placeholder="Enter current password" />
+            </div>
+            <div class="field">
+              <label>New Password</label>
+              <input type="password" id="cp-new" placeholder="Min 6 characters" />
+            </div>
+            <div class="field">
+              <label>Confirm New Password</label>
+              <input type="password" id="cp-confirm" placeholder="Repeat new password" />
+            </div>
+            <div class="modal-actions">
+              <button class="btn" id="modal-cancel">Cancel</button>
+              <button class="btn btn-primary" id="modal-save">Update Password</button>
+            </div>
+          </div>
+        </div>
+      `
+    }
+
+    // ── Login Bindings ──────────────────────────────────────────────────
+    function bindLogin() {
+      const btn = document.getElementById('login-btn')
+      const userInput = document.getElementById('login-user')
+      const passInput = document.getElementById('login-pass')
+
+      // Focus username on load
+      setTimeout(() => userInput.focus(), 100)
+
+      btn.onclick = async () => {
+        const user = userInput.value.trim()
+        const pass = passInput.value
+        const errEl = document.getElementById('login-error')
+
+        if (!user || !pass) {
+          errEl.textContent = 'Please fill in all fields'
+          errEl.style.display = 'block'
+          return
+        }
+
+        btn.textContent = 'Signing in…'
+        btn.disabled = true
+
+        try {
+          const data = await api('/auth/login', {
+            method: 'POST',
+            body: JSON.stringify({ username: user, password: pass }),
+          })
+          token = data.token
+          localStorage.setItem('cms_token', token)
+          toast('Welcome back!')
+          await loadProjects()
+          render()
+        } catch (e) {
+          errEl.textContent = e.message
+          errEl.style.display = 'block'
+          btn.textContent = 'Sign In'
+          btn.disabled = false
+          passInput.value = ''
+          passInput.focus()
+        }
+      }
+
+      passInput.onkeydown = (e) => { if (e.key === 'Enter') btn.click() }
+      userInput.onkeydown = (e) => { if (e.key === 'Enter') passInput.focus() }
+    }
+
+    // ── Dashboard Bindings ──────────────────────────────────────────────
+    function bindDashboard() {
+      document.getElementById('logout-btn').onclick = () => {
+        token = null
+        localStorage.removeItem('cms_token')
+        render()
+      }
+
+      document.getElementById('add-btn').onclick = () => openModal()
+
+      document.getElementById('change-pass-btn').onclick = () => openPasswordModal()
+
+      document.querySelectorAll('[data-edit]').forEach(btn => {
+        btn.onclick = () => {
+          const p = projects.find(x => x._id === btn.dataset.edit)
+          if (p) openModal(p)
+        }
+      })
+
+      document.querySelectorAll('[data-delete]').forEach(btn => {
+        btn.onclick = async () => {
+          const p = projects.find(x => x._id === btn.dataset.delete)
+          if (!confirm(`Delete "${p?.title || 'this project'}"?`)) return
+          try {
+            await api(`/projects/${btn.dataset.delete}`, { method: 'DELETE' })
+            toast('Project deleted')
+            await loadProjects()
+            render()
+          } catch (e) {
+            toast(e.message, 'error')
+          }
+        }
+      })
+    }
+
+    // ── Project Modal Logic ─────────────────────────────────────────────
+    function openModal(p = {}) {
+      document.getElementById('modal-root').innerHTML = renderForm(p)
+      document.getElementById('modal-overlay').onclick = (e) => { if (e.target.id === 'modal-overlay') closeModal() }
+      document.getElementById('modal-cancel').onclick = closeModal
+      document.getElementById('f-title').focus()
+
+      document.getElementById('modal-save').onclick = async () => {
+        const body = {
+          title:       document.getElementById('f-title').value.trim(),
+          subtitle:    document.getElementById('f-subtitle').value.trim(),
+          description: document.getElementById('f-desc').value.trim(),
+          category:    document.getElementById('f-category').value,
+          tags:        document.getElementById('f-tags').value.split(',').map(s => s.trim()).filter(Boolean),
+          image:       document.getElementById('f-image').value.trim(),
+          github:      document.getElementById('f-github').value.trim(),
+          live:        document.getElementById('f-live').value.trim(),
+          featured:    document.getElementById('f-featured').checked,
+          order:       parseInt(document.getElementById('f-order').value) || 0,
+        }
+        if (!body.title) { toast('Title is required', 'error'); return }
+        try {
+          if (p._id) {
+            await api(`/projects/${p._id}`, { method: 'PUT', body: JSON.stringify(body) })
+            toast('Project updated!')
+          } else {
+            await api('/projects', { method: 'POST', body: JSON.stringify(body) })
+            toast('Project created!')
+          }
+          closeModal()
+          await loadProjects()
+          render()
+        } catch (e) {
+          toast(e.message, 'error')
+        }
+      }
+    }
+
+    // ── Password Modal Logic ────────────────────────────────────────────
+    function openPasswordModal() {
+      document.getElementById('modal-root').innerHTML = renderPasswordForm()
+      document.getElementById('modal-overlay').onclick = (e) => { if (e.target.id === 'modal-overlay') closeModal() }
+      document.getElementById('modal-cancel').onclick = closeModal
+      document.getElementById('cp-current').focus()
+
+      document.getElementById('modal-save').onclick = async () => {
+        const current = document.getElementById('cp-current').value
+        const newPass = document.getElementById('cp-new').value
+        const confirm = document.getElementById('cp-confirm').value
+
+        if (!current || !newPass || !confirm) {
+          toast('Fill in all fields', 'error')
+          return
+        }
+        if (newPass.length < 6) {
+          toast('Password must be at least 6 characters', 'error')
+          return
+        }
+        if (newPass !== confirm) {
+          toast('Passwords do not match', 'error')
+          return
+        }
+        try {
+          await api('/admin/change-password', {
+            method: 'POST',
+            body: JSON.stringify({ currentPassword: current, newPassword: newPass }),
+          })
+          toast('Password updated! Use new password next login.')
+          closeModal()
+        } catch (e) {
+          toast(e.message, 'error')
+        }
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('modal-root').innerHTML = ''
+    }
+
+    // ── Data ────────────────────────────────────────────────────────────
+    async function loadProjects() {
+      try { projects = await api('/projects') } catch { projects = [] }
+    }
+
+    // ── Init ────────────────────────────────────────────────────────────
+    ;(async () => {
+      if (token) await loadProjects()
+      render()
+    })()
+  </script>
+</body>
+</html>

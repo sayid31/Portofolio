@@ -6,35 +6,35 @@ import { motion, useInView } from 'framer-motion'
 const GROUPS = [
   {
     domain: 'Backend & API',
-    description: 'Arsitektur server, pemodelan data, dan keamanan sistem.',
+    description: 'Server architecture, data modeling, and system security.',
     items: [
       { name: 'Node.js',       role: 'Runtime & async I/O'        },
-      { name: 'Express',       role: 'Framework server HTTP'        },
-      { name: 'MongoDB',       role: 'Penyimpanan dokumen & query'  },
-      { name: 'PostgreSQL',    role: 'Database relasional & transaksi' },
-      { name: 'JWT Auth',      role: 'Lapisan keamanan stateless'   },
-      { name: 'RESTful API',   role: 'Pola desain HTTP/JSON'        },
+      { name: 'Express',       role: 'HTTP server framework'       },
+      { name: 'MongoDB',       role: 'Document storage & queries'  },
+      { name: 'PostgreSQL',    role: 'Relational DB & transactions' },
+      { name: 'JWT Auth',      role: 'Stateless security layer'   },
+      { name: 'RESTful API',   role: 'HTTP/JSON design pattern'    },
     ],
   },
   {
     domain: 'Frontend & UI',
-    description: 'Pengembangan antarmuka interaktif yang berpusat pada pengguna.',
+    description: 'User-centered interactive interface development.',
     items: [
       { name: 'React.js',      role: 'Component UI runtime'    },
       { name: 'Vite',          role: 'Build tooling & HMR'     },
-      { name: 'Tailwind CSS',  role: 'Styling utility-first'              },
-      { name: 'JavaScript ES+',role: 'Runtime bahasa pemrograman'        },
+      { name: 'Tailwind CSS',  role: 'Utility-first styling'   },
+      { name: 'JavaScript ES+',role: 'Language runtime'         },
     ],
   },
   {
-    domain: 'Embedded & IoT',
-    description: 'Pemrograman firmware, sistem kontrol, dan integrasi hardware.',
+    domain: 'AI & Tools',
+    description: 'Machine learning integration, tooling, and modern dev practices.',
     items: [
-      { name: 'Arduino Uno',   role: 'Platform mikrokontroler'      },
-      { name: 'Fuzzy Logic',   role: 'Algoritma sistem kontrol'     },
-      { name: 'C++ Firmware',  role: 'Eksekusi kode embedded'       },
-      { name: 'Sensor I/O',    role: 'Akuisisi sinyal & ADC'        },
-      { name: 'PWM Control',   role: 'Kontrol aktuator & duty-cycle' },
+      { name: 'Python',        role: 'ML scripting & automation'   },
+      { name: 'OpenAI API',    role: 'LLM integration & prompts'   },
+      { name: 'LangChain',     role: 'AI orchestration framework'  },
+      { name: 'PostgreSQL',    role: 'Vector & relational storage'  },
+      { name: 'REST / WebSocket', role: 'Real-time data pipelines' },
     ],
   },
 ]
@@ -49,7 +49,7 @@ const SKILLS = [
   { name: 'System Architecture',pct: 80, accent: '#8b5cf6' },
   { name: 'MongoDB',            pct: 78, accent: '#6366f1' },
   { name: 'PostgreSQL',         pct: 70, accent: '#6366f1' },
-  { name: 'C++ / IoT Firmware', pct: 65, accent: '#f97316' },
+  { name: 'AI / ML Integration',pct: 60, accent: '#f97316' },
 ]
 
 // ── SkillBar — animates width into view ──────────────────────────────────────
@@ -131,18 +131,19 @@ export default function TechStack() {
         transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <p className="text-xs text-dim font-mono uppercase tracking-widest mb-2">
-          03 / Kedalaman Teknis
+          03 / Technical Depth
         </p>
         <h2 className="text-2xl md:text-3xl font-semibold text-ink tracking-tight">
-          Teknologi &amp; Arsitektur
+          Technologies &amp; Architecture
         </h2>
         <p className="mt-2 text-sm text-muted max-w-[48ch] leading-relaxed">
-          Dikelompokkan berdasarkan bidang. Semua teknologi ini diimplementasikan dengan standar arsitektur produksi, baik pada sistem riil maupun studi kasus mandiri tingkat lanjut.
+          Organized by what I actually build with. Every tool here has been used in
+          real projects or serious case studies — not just weekend experiments.
         </p>
       </motion.div>
 
       {/* Group cards — stagger */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {GROUPS.map((g, i) => (
           <motion.div
             key={g.domain}
@@ -166,7 +167,7 @@ export default function TechStack() {
         transition={{ duration: 0.6, delay: 0.35, ease: 'easeOut' }}
       >
         <span className="text-[10px] text-dim font-mono uppercase tracking-widest shrink-0">
-          Pola Desain
+          Design Patterns
         </span>
         <div className="flex flex-wrap items-center gap-1.5 text-xs font-mono text-muted">
           {['Controller', '→', 'Service', '→', 'Repository', '→', 'Database'].map((node, i) => (
@@ -187,13 +188,13 @@ export default function TechStack() {
       >
         <div className="mb-6">
           <p className="text-xs text-dim font-mono uppercase tracking-widest mb-1">
-            Tingkat Keahlian
+            Skill Proficiency
           </p>
           <h3 className="text-base font-semibold text-ink">
-            Area Fokus Utama
+            Core Focus Areas
           </h3>
           <p className="text-xs text-dim mt-1 max-w-[42ch]">
-            Distribusi keahlian antar disiplin ilmu — berdasarkan proyek yang telah rilis, bukan sekadar penilaian subjektif.
+            Based on what I've shipped, not how I rate myself.
           </p>
         </div>
 
@@ -209,7 +210,7 @@ export default function TechStack() {
             { label: 'Backend',  color: '#6366f1' },
             { label: 'Frontend', color: '#10b981' },
             { label: 'System',   color: '#8b5cf6' },
-            { label: 'IoT',      color: '#f97316' },
+            { label: 'AI',       color: '#f97316' },
           ].map(({ label, color }) => (
             <span key={label} className="flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-sm inline-block" style={{ background: color }} />

@@ -1,10 +1,18 @@
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import { CASE_STUDIES } from '../../api/lib/case-studies.js'
 
 const inView = {
   initial:    { opacity: 0, y: 28 },
   whileInView:{ opacity: 1, y: 0  },
   viewport:   { once: true, amount: 0.15 },
   transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] },
+}
+
+// Resolve an image path against Vite's base URL ('' when none set)
+function resolveImg(image) {
+  if (!image) return ''
+  return image.startsWith('/') ? `${import.meta.env.BASE_URL}${image.slice(1)}` : image
 }
 
 /* ─── Shared primitives ──────────────────────────────────────────────────── */
@@ -49,7 +57,7 @@ function GitHubButton({ href }) {
       className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-fence bg-[#161616] text-dim hover:text-ink hover:border-fence-active transition-colors duration-200 font-mono text-[10px] font-medium"
     >
       <GitHubIcon className="w-3 h-3" />
-      Lihat Kode
+      View Code
     </a>
   )
 }
@@ -71,51 +79,57 @@ function CardShell({ children, className = '', accentLine = false }) {
 /* ─── Card 1: Restock / Stock Movement System (featured, full-width) ────── */
 
 const MOVEMENT_TYPES = [
-  { type: 'INBOUND',  desc: 'stok bertambah',    color: 'text-accent'     },
-  { type: 'OUTBOUND', desc: 'stok berkurang',     color: 'text-red-400'    },
-  { type: 'RELOCATE', desc: 'pembaruan lokasi',   color: 'text-yellow-500' },
+  { type: 'INBOUND',  desc: 'stock increases',    color: 'text-accent'     },
+  { type: 'OUTBOUND', desc: 'stock decreases',    color: 'text-red-400'    },
+  { type: 'RELOCATE', desc: 'location update',    color: 'text-yellow-500' },
 ]
 
-function RestockCard() {
+function RestockCard({ p }) {
   return (
     <CardShell className="p-6 gap-5 justify-between">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-fence-active to-transparent" />
 
       {/* Top */}
       <div className="space-y-4">
-        <img
-          src={`${import.meta.env.BASE_URL}images/restock-engine.webp`}
-          alt="Smart Supply Chain Restock Engine preview"
-          className="w-full aspect-video object-cover border border-white/10 rounded-lg"
-          loading="lazy"
-        />
+        {resolveImg(p.image) && (
+          <img
+            src={resolveImg(p.image)}
+            alt={`${p.title} preview`}
+            className="w-full aspect-video object-cover border border-white/10 rounded-lg"
+            loading="lazy"
+          />
+        )}
 
         <div className="flex items-start justify-between">
           <div className="flex flex-wrap items-center gap-2">
-            <Tag>Supply Chain</Tag>
+            <Tag>{p.category}</Tag>
             <Tag variant="accent">● Auto-Alert</Tag>
           </div>
-          <a href="#" className="text-faint hover:text-ink transition-colors shrink-0 ml-2" aria-label="View project">
+          <a href={p.live || p.github || '#'} className="text-faint hover:text-ink transition-colors shrink-0 ml-2" aria-label="View project">
             <ArrowUpRight />
           </a>
         </div>
 
         <div>
           <h2 className="text-lg font-semibold text-ink tracking-tight mb-0.5">
-            Restock &amp; Stock Movement System
+            {p.title}
           </h2>
           <p className="text-xs text-dim font-mono mb-3">
-            Audit trail presisi dengan peringatan stok otomatis
+            {p.subtitle}
           </p>
           <p className="text-sm text-muted leading-relaxed">
-            Setiap mutasi stok dibungkus dalam{' '}
-            <span className="text-[#c4c4c4]">transaksi MySQL</span> dengan row-level
-            locking (<span className="text-accent font-mono">FOR UPDATE</span>) untuk
-            mencegah race conditions saat beban tinggi. Log audit yang immutable
-            menangkap snapshot data sebelum/sesudah pada setiap pergerakan barang. Job{' '}
-            <span className="text-[#c4c4c4]">node-cron</span> memindai barang dengan
-            stok di bawah batas minimal dan otomatis mengirimkan email ringkasan ke
-            manajer gudang — sama sekali tidak memerlukan pemantauan manual.
+            {p.description || (
+              <>
+                Every stock mutation is wrapped in a{' '}
+                <span className="text-[#c4c4c4]">MySQL transaction</span> with row-level
+                locking (<span className="text-accent font-mono">FOR UPDATE</span>) to
+                prevent race conditions under high load. An immutable audit log
+                captures before/after snapshots on every movement. A{' '}
+                <span className="text-[#c4c4c4]">node-cron</span> job scans items below
+                minimum threshold and automatically sends a summary email to the
+                warehouse manager — completely eliminating manual monitoring.
+              </>
+            )}
           </p>
         </div>
       </div>
@@ -138,16 +152,16 @@ function RestockCard() {
         <div className="flex items-center gap-3 px-3.5 py-3 rounded-lg border border-fence bg-[#0a0a0a]">
           <div className="w-1.5 h-1.5 rounded-full bg-accent shrink-0 animate-pulse" />
           <span className="text-xs text-muted font-mono">
-            Peringatan stok menipis terpicu saat{' '}
+            Low stock alert triggered when{' '}
             <span className="text-accent font-semibold">current_stock &lt; threshold</span>
           </span>
         </div>
 
         <div className="flex flex-wrap items-center gap-1.5">
-          {['Node.js', 'MySQL', 'node-cron', 'Nodemailer', 'Express'].map((t) => (
+          {(p.tags || []).map((t) => (
             <Tag key={t}>{t}</Tag>
           ))}
-          <GitHubButton href="https://github.com/sayid31/Restock_Engine" />
+          {p.github && <GitHubButton href={p.github} />}
         </div>
       </div>
     </CardShell>
@@ -157,13 +171,13 @@ function RestockCard() {
 /* ─── Card 2: Sauber Composter (featured) ───────────────────────────────── */
 
 const SENSORS = [
-  { id: 'DS18B20',    label: 'suhu',        unit: '°C',    color: 'text-accent'     },
-  { id: 'SoilMoist',  label: 'kelembaban',  unit: '%',     color: 'text-blue-400'   },
+  { id: 'DS18B20',    label: 'temp',       unit: '°C',    color: 'text-accent'     },
+  { id: 'SoilMoist',  label: 'moisture',   unit: '%',     color: 'text-blue-400'   },
   { id: 'pH Probe',   label: 'pH',          unit: '0–14',  color: 'text-yellow-500' },
   { id: 'MQ Gas',     label: 'gas_index',   unit: '0–100', color: 'text-red-400'    },
 ]
 
-function SauberCard() {
+function SauberCard({ p }) {
   return (
     <CardShell className="p-6 gap-5 justify-between" accentLine>
       <div
@@ -176,21 +190,23 @@ function SauberCard() {
 
       {/* Top section with image */}
       <div className="relative space-y-5">
-        <img
-          src={`${import.meta.env.BASE_URL}images/sauber.webp`}
-          alt="Sauber Organic Composter preview"
-          className="w-full aspect-video object-cover border border-white/10 rounded-lg"
-          loading="lazy"
-        />
+        {resolveImg(p.image) && (
+          <img
+            src={resolveImg(p.image)}
+            alt={`${p.title} preview`}
+            className="w-full aspect-video object-cover border border-white/10 rounded-lg"
+            loading="lazy"
+          />
+        )}
 
         <div>
           <div className="flex items-start justify-between mb-4">
             <div className="flex flex-wrap items-center gap-2">
-              <Tag variant="accent">IoT &amp; Embedded</Tag>
+              <Tag variant="accent">{p.category}</Tag>
               <Tag variant="accent">● Live</Tag>
             </div>
             <a
-              href="#"
+              href={p.live || p.github || '#'}
               className="text-faint hover:text-ink transition-colors shrink-0 ml-2"
               aria-label="View project"
             >
@@ -199,25 +215,29 @@ function SauberCard() {
           </div>
 
           <h2 className="text-lg font-semibold text-ink tracking-tight mb-0.5">
-            Sauber Organic Composter
+            {p.title}
           </h2>
           <p className="text-xs text-dim font-mono mb-4">
-            IoT sistem kompos otomatis berbasis Fuzzy Logic
+            {p.subtitle}
           </p>
 
           <p className="text-sm text-muted leading-relaxed max-w-lg">
-            <span className="text-[#c4c4c4]">ESP32</span> membaca 4 sensor secara
-            real-time dan menjalankan{' '}
-            <span className="text-accent">Sugeno Fuzzy Inference</span> dengan 12
-            rule untuk menentukan tingkat kematangan kompos. Tiga aktuator
-            dikontrol otomatis — pompa EM4 (sekali saat batch baru), motor pengaduk
-            (terjadwal RTC setiap{' '}
-            <span className="text-accent font-mono">20:30</span>), dan kipas (durasi
-            variabel{' '}
-            <span className="text-accent font-mono">30s / 60s / 120s</span>{' '}
-            berdasarkan output fuzzy). Data dikirim ke{' '}
-            <span className="text-[#c4c4c4]">dual backend</span> (HTTPS produksi +
-            HTTP lokal pameran) setiap 30 menit, dipantau lewat dashboard React.
+            {p.description || (
+              <>
+                <span className="text-[#c4c4c4]">ESP32</span> reads 4 sensors in
+                real-time and runs{' '}
+                <span className="text-accent">Sugeno Fuzzy Inference</span> with 12
+                rules to determine compost maturity level. Three actuators are
+                automatically controlled — EM4 pump (once per batch), stirrer motor
+                (RTC-scheduled every{' '}
+                <span className="text-accent font-mono">20:30</span>), and fan (variable
+                duration{' '}
+                <span className="text-accent font-mono">30s / 60s / 120s</span>{' '}
+                based on fuzzy output). Data is sent to{' '}
+                <span className="text-[#c4c4c4]">dual backends</span> (production HTTPS
+                + local exhibition HTTP) every 30 minutes, monitored via a React dashboard.
+              </>
+            )}
           </p>
         </div>
       </div>
@@ -237,17 +257,17 @@ function SauberCard() {
           <div className="col-span-2 mt-1 pt-1 border-t border-fence">
             <span className="text-accent">Sugeno</span>
             <span className="text-dim">{' z∈[20,100] → '}</span>
-            <span className="text-ink">"Belum Matang"</span>
+            <span className="text-ink">"Immature"</span>
             <span className="text-faint">{' ··· '}</span>
-            <span className="text-accent">"Matang"</span>
+            <span className="text-accent">"Mature"</span>
           </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-1.5">
-          {['ESP32', 'Fuzzy Sugeno', 'C++', 'React', 'Node.js', 'RTC DS3231'].map(
-            (t) => <Tag key={t}>{t}</Tag>,
-          )}
-          <GitHubButton href="https://github.com/sayid31/sauber-composter" />
+          {(p.tags || []).map((t) => (
+            <Tag key={t}>{t}</Tag>
+          ))}
+          {p.github && <GitHubButton href={p.github} />}
         </div>
       </div>
     </CardShell>
@@ -256,7 +276,7 @@ function SauberCard() {
 
 /* ─── Card 3: SaaS Financial BEP Calculator (featured) ─────────────────── */
 
-function FinancialCard() {
+function FinancialCard({ p }) {
   return (
     <CardShell className="p-6 gap-5 justify-between" accentLine>
       <div
@@ -268,40 +288,45 @@ function FinancialCard() {
       />
 
       <div className="relative space-y-5">
-        <img
-          src={`${import.meta.env.BASE_URL}images/financial-bep.webp`}
-          alt="Full-Stack AI Financial Forecaster preview"
-          className="w-full aspect-video object-cover border border-white/10 rounded-lg"
-          loading="lazy"
-        />
+        {resolveImg(p.image) && (
+          <img
+            src={resolveImg(p.image)}
+            alt={`${p.title} preview`}
+            className="w-full aspect-video object-cover border border-white/10 rounded-lg"
+            loading="lazy"
+          />
+        )}
 
         <div>
           <div className="flex items-start justify-between mb-4">
             <div className="flex flex-wrap items-center gap-2">
-              <Tag variant="blue">Financial SaaS</Tag>
+              <Tag variant="blue">{p.category}</Tag>
               <Tag variant="blue">TypeScript</Tag>
             </div>
-            <a href="#" className="text-faint hover:text-ink transition-colors shrink-0 ml-2" aria-label="View project">
+            <a href={p.live || p.github || '#'} className="text-faint hover:text-ink transition-colors shrink-0 ml-2" aria-label="View project">
               <ArrowUpRight />
             </a>
           </div>
 
           <h2 className="text-lg font-semibold text-ink tracking-tight mb-0.5">
-            SaaS Break-Even Point Calculator
+            {p.title}
           </h2>
           <p className="text-xs text-dim font-mono mb-4">
-            API peramalan keuangan berbasis AI
+            {p.subtitle}
           </p>
 
           <p className="text-sm text-muted leading-relaxed max-w-lg">
-            Mesin proyeksi keuangan yang menghitung{' '}
-            <span className="text-[#c4c4c4]">Break-Even Point</span> (BEP) melalui
-            analisis contribution margin. Hasil kalkulasi disimpan secara atomik melalui{' '}
-            <span className="text-blue-400 font-mono">Prisma.$transaction()</span>{' '}
-            — memastikan tidak ada data yang corrupt/terbengkalai jika terjadi kegagalan
-            sistem. API menggunakan sistem versi ({' '}
-            <span className="text-blue-400 font-mono">/api/v1/</span>) untuk mendukung
-            pembaruan tanpa merusak integrasi yang sudah berjalan.
+            {p.description || (
+              <>
+                A financial projection engine that calculates{' '}
+                <span className="text-[#c4c4c4]">Break-Even Point</span> (BEP) through
+                contribution margin analysis. Computation results are saved atomically via{' '}
+                <span className="text-blue-400 font-mono">Prisma.$transaction()</span>{' '}
+                — ensuring no data corruption on system failure. The API uses versioning ({' '}
+                <span className="text-blue-400 font-mono">/api/v1/</span>) to support
+                updates without breaking existing integrations.
+              </>
+            )}
           </p>
         </div>
       </div>
@@ -323,10 +348,10 @@ function FinancialCard() {
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
-          {['TypeScript', 'Express', 'PostgreSQL', 'Prisma', 'REST'].map((t) => (
+          {(p.tags || []).map((t) => (
             <Tag key={t}>{t}</Tag>
           ))}
-          <GitHubButton href="https://github.com/sayid31/System_Financial" />
+          {p.github && <GitHubButton href={p.github} />}
         </div>
       </div>
     </CardShell>
@@ -336,30 +361,32 @@ function FinancialCard() {
 /* ─── Card 4: Burger POS System (secondary) ─────────────────────────────── */
 
 const POS_PAGES = [
-  { page: 'index.html',     label: 'Menu Pelanggan & Keranjang', color: 'text-accent'     },
-  { page: 'dashboard.html', label: 'Dashboard Penjualan',        color: 'text-blue-400'   },
-  { page: 'inventory.html', label: 'Manajemen Inventori',        color: 'text-yellow-500' },
-  { page: 'orders.html',    label: 'Pelacakan Pesanan',          color: 'text-faint'      },
+  { page: 'index.html',     label: 'Customer Menu & Cart',     color: 'text-accent'     },
+  { page: 'dashboard.html', label: 'Sales Dashboard',          color: 'text-blue-400'   },
+  { page: 'inventory.html', label: 'Inventory Management',     color: 'text-yellow-500' },
+  { page: 'orders.html',    label: 'Order Tracking',           color: 'text-faint'      },
 ]
 
-function POSCard() {
+function POSCard({ p }) {
   return (
     <CardShell className="p-6 gap-5 justify-between">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-fence-active to-transparent" />
 
       {/* Top */}
       <div>
-        <img
-          src={`${import.meta.env.BASE_URL}images/burger-post.webp`}
-          alt="Burger POS System preview"
-          className="w-full aspect-video object-cover border border-white/10 rounded-lg mb-5"
-          loading="lazy"
-        />
+        {resolveImg(p.image) && (
+          <img
+            src={resolveImg(p.image)}
+            alt={`${p.title} preview`}
+            className="w-full aspect-video object-cover border border-white/10 rounded-lg mb-5"
+            loading="lazy"
+          />
+        )}
         <div className="flex items-start justify-between mb-4">
-          <Tag>Frontend</Tag>
+          <Tag>{p.category}</Tag>
           <a
-            href="https://github.com/sayid31/burger-pos-system"
-            target="_blank"
+            href={p.github || p.live || '#'}
+            target={p.github || p.live ? '_blank' : undefined}
             rel="noopener noreferrer"
             className="text-faint hover:text-ink transition-colors shrink-0 ml-2"
             aria-label="View project"
@@ -369,19 +396,23 @@ function POSCard() {
         </div>
 
         <h2 className="text-lg font-semibold text-ink tracking-tight mb-0.5">
-          Burger POS System
+          {p.title}
         </h2>
         <p className="text-xs text-dim font-mono mb-4">
-          Frontend point-of-sale &amp; dashboard admin
+          {p.subtitle}
         </p>
 
         <p className="text-sm text-muted leading-relaxed">
-          UI POS dengan fitur lengkap dibangun menggunakan{' '}
-          <span className="text-[#c4c4c4]">Vanilla JS</span> — pemesanan pelanggan
-          dengan keranjang, modal checkout, dan metode pembayaran. Sisi admin mencakup{' '}
-          <span className="text-[#c4c4c4]">dashboard Chart.js</span>{' '}
-          (tren penjualan + jam sibuk), CRUD inventori, promo, dan laporan penjualan.
-          Belum terhubung dengan backend.
+          {p.description || (
+            <>
+              Full-featured POS UI built with{' '}
+              <span className="text-[#c4c4c4]">Vanilla JS</span> — customer ordering
+              with cart, checkout modal, and payment methods. Admin side includes a{' '}
+              <span className="text-[#c4c4c4]">Chart.js dashboard</span>{' '}
+              (sales trends + peak hours), inventory CRUD, promos, and sales reports.
+              Not yet connected to backend.
+            </>
+          )}
         </p>
 
         {/* Page manifest */}
@@ -412,10 +443,10 @@ function POSCard() {
         </div>
 
         <div className="flex flex-wrap items-center gap-1.5">
-          {['HTML', 'CSS', 'Vanilla JS', 'Chart.js', 'Swiper.js'].map((t) => (
+          {(p.tags || []).map((t) => (
             <Tag key={t}>{t}</Tag>
           ))}
-          <GitHubButton href="https://github.com/sayid31/burger-pos-system" />
+          {p.github && <GitHubButton href={p.github} />}
         </div>
       </div>
     </CardShell>
@@ -424,40 +455,46 @@ function POSCard() {
 
 /* ─── Card 5: Inventory Management System (secondary) ───────────────────── */
 
-function InventoryCard() {
+function InventoryCard({ p }) {
   return (
     <CardShell className="p-6 gap-5 justify-between">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-fence-active to-transparent" />
 
       <div>
-        <img
-          src={`${import.meta.env.BASE_URL}images/inventory.webp`}
-          alt="Inventory Management System preview"
-          className="w-full aspect-video object-cover border border-white/10 rounded-lg mb-5"
-          loading="lazy"
-        />
+        {resolveImg(p.image) && (
+          <img
+            src={resolveImg(p.image)}
+            alt={`${p.title} preview`}
+            className="w-full aspect-video object-cover border border-white/10 rounded-lg mb-5"
+            loading="lazy"
+          />
+        )}
         <div className="flex items-start justify-between mb-4">
           <div className="flex flex-wrap items-center gap-2">
-            <Tag>Full-Stack</Tag>
+            <Tag>{p.category}</Tag>
             <Tag variant="blue">Inventory</Tag>
           </div>
-          <a href="#" className="text-faint hover:text-ink transition-colors shrink-0 ml-2" aria-label="View project">
+          <a href={p.live || p.github || '#'} className="text-faint hover:text-ink transition-colors shrink-0 ml-2" aria-label="View project">
             <ArrowUpRight />
           </a>
         </div>
 
         <h2 className="text-base font-semibold text-ink tracking-tight mb-0.5">
-          Inventory Management System
+          {p.title}
         </h2>
         <p className="text-xs text-dim font-mono mb-4">
-          Pelacakan &amp; kontrol barang gudang
+          {p.subtitle}
         </p>
 
         <p className="text-sm text-muted leading-relaxed">
-          Sistem inventori gudang berbasis SKU dengan{' '}
-          <span className="text-[#c4c4c4]">autentikasi JWT berdasarkan role</span>,
-          pemfilteran kategori, pencarian, dan pelacakan multi-lokasi. Mutasi data
-          dibatasi hanya untuk admin.
+          {p.description || (
+            <>
+              SKU-based warehouse inventory system with{' '}
+              <span className="text-[#c4c4c4]">role-based JWT authentication</span>,
+              category filtering, search, and multi-location tracking. Data mutations
+              are restricted to admin only.
+            </>
+          )}
         </p>
       </div>
 
@@ -469,10 +506,10 @@ function InventoryCard() {
           <div><span className="text-blue-400">location</span><span className="text-dim"> = </span><span className="text-accent">"Zone A-3"</span></div>
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
-          {['Node.js', 'Express', 'MySQL', 'React', 'JWT'].map((t) => (
+          {(p.tags || []).map((t) => (
             <Tag key={t}>{t}</Tag>
           ))}
-          <GitHubButton href="https://github.com/sayid31/inventory-supply-chain-" />
+          {p.github && <GitHubButton href={p.github} />}
         </div>
       </div>
     </CardShell>
@@ -481,16 +518,16 @@ function InventoryCard() {
 
 /* ─── Card 6: Gaming Liquid Shield (secondary) ───────────────────────────── */
 
-function GamingShieldCard() {
+function GamingShieldCard({ p }) {
   return (
     <CardShell className="p-6 gap-4 justify-between min-h-[280px]">
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-fence-active to-transparent" />
 
       <div>
         <div className="flex items-start justify-between mb-4">
-          <Tag>Hardware Innovation</Tag>
+          <Tag>{p.category}</Tag>
           <a
-            href="#"
+            href={p.live || p.github || '#'}
             className="text-faint hover:text-ink transition-colors shrink-0 ml-2"
             aria-label="View project"
           >
@@ -499,16 +536,20 @@ function GamingShieldCard() {
         </div>
 
         <h2 className="text-base font-semibold text-ink tracking-tight mb-0.5">
-          Gaming Liquid Shield
+          {p.title}
         </h2>
         <p className="text-xs text-dim font-mono mb-4">
-          Rekayasa termal &amp; desain mekanikal
+          {p.subtitle}
         </p>
 
         <p className="text-sm text-muted leading-relaxed">
-          Solusi pendingin cair kustom yang dirancang untuk mencegah thermal
-          throttling pada sistem gaming performa tinggi. Fokus pada pembuangan
-          panas di tingkat hardware untuk menjaga clock speed tetap stabil.
+          {p.description || (
+            <>
+              Custom liquid cooling solution designed to prevent thermal
+              throttling on high-performance gaming systems. Focused on hardware-level
+              heat dissipation to maintain stable clock speeds.
+            </>
+          )}
         </p>
       </div>
 
@@ -517,27 +558,116 @@ function GamingShieldCard() {
         <div className="mb-3 flex items-center gap-3 px-3.5 py-3 rounded-lg border border-fence bg-[#0a0a0a]">
           <div className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
           <span className="text-xs text-muted font-mono">
-            Kejadian thermal throttle:{' '}
-            <span className="text-accent font-semibold">0%</span> saat beban kerja berat
+            Thermal throttle incidents:{' '}
+            <span className="text-accent font-semibold">0%</span> under heavy workload
           </span>
         </div>
 
         <div className="flex flex-wrap gap-1.5">
-          {['Thermal Engineering', 'Hardware Design', 'Mechanical CAD'].map((t) => (
+          {(p.tags || []).map((t) => (
             <Tag key={t}>{t}</Tag>
           ))}
+          {p.github && <GitHubButton href={p.github} />}
         </div>
       </div>
     </CardShell>
   )
 }
 
-/* ─── Card 7: Engineering Approach (secondary) ──────────────────────────── */
+/* ─── Card 7: AI Customer Feedback Analyzer (featured) ──────────────────── */
+
+function AIFeedbackCard({ p }) {
+  return (
+    <CardShell className="p-6 gap-5 justify-between" accentLine>
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse 50% 60% at 50% 0%, rgba(139,92,246,0.06), transparent)',
+        }}
+      />
+
+      <div className="relative space-y-5">
+        <div className="w-full aspect-video rounded-lg border border-white/10 bg-gradient-to-br from-violet-500/10 via-indigo-500/5 to-transparent flex items-center justify-center">
+          <div className="text-center space-y-2">
+            <div className="text-4xl">🧠</div>
+            <div className="text-[10px] text-dim font-mono">AI SENTIMENT ENGINE</div>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <Tag variant="accent">{p.category}</Tag>
+              <Tag variant="accent">● Dual Provider</Tag>
+            </div>
+            <a
+              href={p.github || p.live || '#'}
+              target={p.github || p.live ? '_blank' : undefined}
+              rel="noopener noreferrer"
+              className="text-faint hover:text-ink transition-colors shrink-0 ml-2"
+              aria-label="View project"
+            >
+              <ArrowUpRight />
+            </a>
+          </div>
+
+          <h2 className="text-lg font-semibold text-ink tracking-tight mb-0.5">
+            {p.title}
+          </h2>
+          <p className="text-xs text-dim font-mono mb-4">
+            {p.subtitle}
+          </p>
+
+          <p className="text-sm text-muted leading-relaxed max-w-lg">
+            {p.description || (
+              <>
+                Upload customer review CSVs and get instant{' '}
+                <span className="text-violet-400 font-mono">AI-powered sentiment analysis</span>{' '}
+                with interactive charts. Supports both{' '}
+                <span className="text-[#c4c4c4]">OpenAI GPT</span> and{' '}
+                <span className="text-[#c4c4c4]">Anthropic Claude</span> as analysis backends.
+                Features real-time processing, pain point detection with frequency counts,
+                and a responsive dashboard with Framer Motion animations.
+              </>
+            )}
+          </p>
+        </div>
+      </div>
+
+      <div className="relative">
+        <div className="mb-4 p-3.5 rounded-lg border border-fence bg-[#0a0a0a] font-mono text-xs leading-6">
+          <div className="text-faint mb-1 select-none">{'// sentiment_pipeline'}</div>
+          <div>
+            <span className="text-violet-400">CSV</span>
+            <span className="text-dim"> → Multer → Parser → </span>
+            <span className="text-accent">AI Provider</span>
+          </div>
+          <div>
+            <span className="text-dim">  → </span>
+            <span className="text-yellow-500">sentiment</span>
+            <span className="text-dim"> + </span>
+            <span className="text-red-400">pain_points</span>
+            <span className="text-dim"> → Dashboard</span>
+          </div>
+        </div>
+        <div className="flex flex-wrap items-center gap-1.5">
+          {(p.tags || []).map((t) => (
+            <Tag key={t}>{t}</Tag>
+          ))}
+          {p.github && <GitHubButton href={p.github} />}
+        </div>
+      </div>
+    </CardShell>
+  )
+}
+
+/* ─── Card 8: Engineering Approach (secondary) ──────────────────────────── */
 
 const PRINCIPLES = [
-  { label: 'Aman secara default',         sub: 'Desain API Auth-first, bukan sekadar tambahan'              },
-  { label: 'Integrasi Hardware ↔ Software', sub: 'Kefasihan integrasi lintas disiplin ilmu'                 },
-  { label: 'Hasil yang terukur',           sub: 'Performa lebih diutamakan daripada sekadar estetika'       },
+  { label: 'Secure by Default',           sub: 'Auth-first API design, not an afterthought'                    },
+  { label: 'Hardware ↔ Software Integration', sub: 'Cross-disciplinary fluency'                                 },
+  { label: 'Measurable Results',          sub: 'Performance prioritized over mere aesthetics'                  },
 ]
 
 function ApproachCard() {
@@ -545,11 +675,11 @@ function ApproachCard() {
     <CardShell className="p-6 gap-5 justify-between min-h-[280px]">
       <div>
         <div className="text-[10px] text-dim font-mono uppercase tracking-widest mb-4">
-          Filosofi Rekayasa
+          Engineering Philosophy
         </div>
 
         <blockquote className="text-sm text-[#c4c4c4] leading-relaxed mb-6 border-l-2 border-accent/50 pl-3.5">
-          "Sistem yang bekerja di kondisi dunia nyata, bukan sekadar demo."
+          "Systems that work in the real world, not just demos."
         </blockquote>
 
         <ul className="space-y-3.5">
@@ -574,9 +704,130 @@ function ApproachCard() {
   )
 }
 
+/* ─── Dynamic card: projects managed via /admin (MongoDB) ────────────────── */
+
+function DynamicProjectCard({ project }) {
+  const { title, subtitle, description, category, tags = [], image, github, live, featured } = project
+
+  const imgSrc = image
+    ? image.startsWith('/')
+      ? `${import.meta.env.BASE_URL}${image.slice(1)}`
+      : image
+    : ''
+
+  const link = live || github || '#'
+
+  return (
+    <CardShell className="p-6 gap-5 justify-between" accentLine={!!featured}>
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-fence-active to-transparent" />
+
+      <div className="space-y-4">
+        {imgSrc ? (
+          <img
+            src={imgSrc}
+            alt={`${title} preview`}
+            className="w-full aspect-video object-cover border border-white/10 rounded-lg"
+            loading="lazy"
+          />
+        ) : (
+          <div className="w-full aspect-video rounded-lg border border-white/10 bg-gradient-to-br from-accent/10 via-indigo-500/5 to-transparent flex items-center justify-center">
+            <span className="text-4xl">⚙️</span>
+          </div>
+        )}
+
+        <div className="flex items-start justify-between">
+          <div className="flex flex-wrap items-center gap-2">
+            <Tag variant="blue">{category}</Tag>
+            {featured && <Tag variant="accent">● Featured</Tag>}
+          </div>
+          <a
+            href={link}
+            target={link !== '#' ? '_blank' : undefined}
+            rel="noopener noreferrer"
+            className="text-faint hover:text-ink transition-colors shrink-0 ml-2"
+            aria-label="View project"
+          >
+            <ArrowUpRight />
+          </a>
+        </div>
+
+        <div>
+          <h2 className="text-lg font-semibold text-ink tracking-tight mb-0.5">
+            {title}
+          </h2>
+          {subtitle && <p className="text-xs text-dim font-mono mb-3">{subtitle}</p>}
+          {description && (
+            <p className="text-sm text-muted leading-relaxed">{description}</p>
+          )}
+        </div>
+      </div>
+
+      <div>
+        {tags.length > 0 && (
+          <div className="flex flex-wrap items-center gap-1.5 mb-3">
+            {tags.map((t) => <Tag key={t}>{t}</Tag>)}
+          </div>
+        )}
+        {github && <GitHubButton href={github} />}
+      </div>
+    </CardShell>
+  )
+}
+
+/* ─── Project data — graceful fallback when API is down ───────────────────── */
+
+// status: 'loading' | 'ok' | 'error'
+// While loading or when the API is down, case-study cards fall back to the
+// CASE_STUDIES defaults so the portfolio never loses its cards.
+function useProjects() {
+  const [state, setState] = useState({ status: 'loading', items: [] })
+
+  useEffect(() => {
+    const ctrl = new AbortController()
+    const timer = setTimeout(() => ctrl.abort(), 8000)
+
+    fetch('/api/projects', { signal: ctrl.signal })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+      .then((data) => {
+        setState({ status: 'ok', items: Array.isArray(data) ? data : [] })
+      })
+      .catch(() => {
+        setState((prev) => (prev.status === 'loading' ? { status: 'error', items: [] } : prev))
+      })
+      .finally(() => clearTimeout(timer))
+
+    return () => {
+      clearTimeout(timer)
+      ctrl.abort()
+    }
+  }, [])
+
+  return state
+}
+
 /* ─── Section export ────────────────────────────────────────────────────── */
 
 export default function CaseStudies() {
+  const { status, items } = useProjects()
+
+  // Look up a case-study document by slug. While the API is loading or down,
+  // fall back to the seeded defaults; on success a missing slug means the
+  // project was deleted from the admin panel.
+  const doc = (slug) =>
+    status === 'ok'
+      ? items.find((p) => p.slug === slug)
+      : CASE_STUDIES.find((c) => c.slug === slug)
+
+  const restock     = doc('restock')
+  const sauber      = doc('sauber')
+  const financial   = doc('financial')
+  const aiFeedback  = doc('ai-feedback')
+  const burgerPos   = doc('burger-pos')
+  const inventory   = doc('inventory')
+  const gamingShield = doc('gaming-shield')
+
+  // New projects added via the admin panel (no slug) → "Latest Projects"
+  const newProjects = status === 'ok' ? items.filter((p) => !p.slug) : []
   return (
     <section id="work" className="max-w-6xl mx-auto px-6 py-24">
 
@@ -584,15 +835,14 @@ export default function CaseStudies() {
       <motion.div className="flex items-end justify-between mb-10" {...inView}>
         <div>
           <p className="text-xs text-dim font-mono uppercase tracking-widest mb-2">
-            02 / Karya Unggulan
+            02 / Featured Work
           </p>
           <h2 className="text-2xl md:text-3xl font-semibold text-ink tracking-tight">
-            Studi Kasus Proyek
+            Project Case Studies
           </h2>
         </div>
         <p className="hidden md:block text-sm text-muted max-w-[32ch] text-right leading-relaxed">
-          Setiap proyek dirancang untuk memecahkan masalah spesifik
-          dan memberikan hasil yang terukur.
+          Real projects, real constraints, real outcomes.
         </p>
       </motion.div>
 
@@ -604,7 +854,7 @@ export default function CaseStudies() {
         transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <p className="text-[10px] text-dim font-mono uppercase tracking-widest mb-5">
-          — Proyek Unggulan
+          — Featured Projects
         </p>
 
         {/*
@@ -612,10 +862,11 @@ export default function CaseStudies() {
             [RestockCard ────── col-span-2, full width ──────]
             [SauberCard        ] [FinancialCard              ]
         */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-16">
-          <RestockCard />
-          <SauberCard />
-          <FinancialCard />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
+          {restock && <RestockCard p={restock} />}
+          {sauber && <SauberCard p={sauber} />}
+          {financial && <FinancialCard p={financial} />}
+          {aiFeedback && <AIFeedbackCard p={aiFeedback} />}
         </div>
       </motion.div>
 
@@ -627,18 +878,39 @@ export default function CaseStudies() {
         transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         <p className="text-[10px] text-dim font-mono uppercase tracking-widest mb-5">
-          — Proyek Tambahan
+          — Additional Projects
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <POSCard />
-          <InventoryCard />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {burgerPos && <POSCard p={burgerPos} />}
+          {inventory && <InventoryCard p={inventory} />}
           <div className="flex flex-col gap-4">
-            <GamingShieldCard />
+            {gamingShield && <GamingShieldCard p={gamingShield} />}
             <ApproachCard />
           </div>
         </div>
       </motion.div>
+
+      {/* ── CMS-managed projects (fed by /admin) ─────────────────────────── */}
+      {newProjects.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.08 }}
+          transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="mt-16"
+        >
+          <p className="text-[10px] text-dim font-mono uppercase tracking-widest mb-5">
+            — Latest Projects
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {newProjects.map((p) => (
+              <DynamicProjectCard key={p._id} project={p} />
+            ))}
+          </div>
+        </motion.div>
+      )}
 
     </section>
   )

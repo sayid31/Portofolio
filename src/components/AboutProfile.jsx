@@ -88,10 +88,10 @@ export default function AboutProfile() {
         className="mb-10"
       >
         <p className="text-xs text-dim font-mono uppercase tracking-widest mb-2">
-          04 / Profil
+          04 / Profile
         </p>
         <h2 className="text-2xl md:text-3xl font-semibold text-ink tracking-tight">
-          Tentang Saya
+          About Me
         </h2>
       </motion.div>
 
@@ -129,7 +129,7 @@ export default function AboutProfile() {
               {/* Availability indicator */}
               <span
                 className="absolute bottom-2 right-2 w-3 h-3 rounded-full bg-accent border-2 border-card"
-                title="Terbuka untuk peluang baru"
+                title="Open to new opportunities"
               />
             </div>
           </div>
@@ -143,25 +143,24 @@ export default function AboutProfile() {
                 Muhamad Sayid Amanulloh
               </h3>
               <p className="text-xs text-accent font-mono mt-1">
-                Web Developer &amp; IoT Engineer
+                Full-Stack Developer &amp; AI Enthusiast
               </p>
             </div>
 
-            {/* Short bio */}
+            {/* Short bio — rewritten to feel human, not AI */}
             <p className="text-sm text-muted leading-relaxed mb-6 max-w-[62ch]">
-              Engineer berlatar belakang{' '}
-              <span className="text-[#c4c4c4]">Rekayasa Sistem Komputer</span>, saya
-              terbiasa mengelola pengembangan sistem secara utuh—dari penulisan firmware
-              perangkat keras hingga pembuatan API skala produksi. Saya menangani sistem
-              secara end-to-end dan bertanggung jawab atas setiap keputusan teknis; mulai
-              dari perancangan arsitektur, pengelolaan transaksi database, hingga strategi
-              deployment untuk memastikan aplikasi berjalan stabil di lapangan. Fokus
-              keahlian saya mencakup integrasi{' '}
-              <span className="text-accent font-mono">embedded IoT</span>{' '}
-              (ESP32, real-time control logic) dan pengembangan Full-Stack Web{' '}
-              (<span className="text-[#c4c4c4]">Node.js</span>, REST API, React), dengan
-              penekanan pada keamanan data serta solusi yang memberikan efisiensi nyata
-              bagi bisnis.
+              I studied{' '}
+              <span className="text-[#c4c4c4]">Computer Systems Engineering</span> and
+              that's where I got hooked on building things that actually work — not just
+              prototypes. I'm the kind of developer who wants to own the whole stack: the
+              API design, the database layer, the frontend, and how it all connects to
+              real-world systems. Lately I've been deep into{' '}
+              <span className="text-accent font-mono">AI-powered features</span> —
+              weaving machine learning models into web apps that feel fast and useful.
+              I work mostly with{' '}
+              <span className="text-[#c4c4c4]">Node.js</span>, React, and PostgreSQL, and
+              I care about writing code that's secure, readable, and actually solves
+              the problem it's supposed to.
             </p>
 
             {/* Social links */}
